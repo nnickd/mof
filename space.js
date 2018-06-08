@@ -10,8 +10,8 @@ Space.prototype.update = function (_pointForce = null) {
   }
   for (var i = 0; i < this.points.length; i++) {
     this.points[i].update();
-    // if (_pointForce) {
-    //   _pointForce(this.points[i]);
-    // }
+    if (_pointForce) {
+      _pointForce(this.points[i]);
+    }
   }
 }

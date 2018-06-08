@@ -5,11 +5,19 @@ function Point(options = {}) {
 
   //this.mass = random([50, 50, 50, 50, 100, 100, 100, 150]);
   this.mass = 100;
-  this.charge = random([-1, 1]);
+  // this.charge = random([-1, 1]);
   this.spin = random([-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2]);
 
   // this.colour = color(random([190, 200, 210]), random([25, 35, 45]), random([60, 70, 80]));
-  this.colour = color(random([0, 128, 255]), random([0, 128, 255]), random([0, 128, 255]));
+  // this.colour = color(random([0, 128, 255]), random([0, 128, 255]), random([0, 128, 255]));
+
+  // this.colour = random([color(255, 0, 0), color(0, 0, 255)])
+  push();
+  colorMode(HSB, 360, 100, 100);
+  this.colour = color(random() * 360, 100, 100);
+  pop();
+  // debugger;
+  this.charge = (hue(this.colour) - 180)// / 180;
   this.radius = 10;
 
   this.maxSpeed = 10;
@@ -32,8 +40,10 @@ Point.prototype.show = function () {
   push();
   translate(width / 2, height / 2);
   noStroke()
+  colorMode(HSB, 360, 100, 100);
   fill(this.colour);
   ellipse(this.position.x, this.position.y, this.radius);
+  // text(this.charge, this.position.x + this.radius, this.position.y + this.radius)
   pop();
 }
 
@@ -69,3 +79,11 @@ Point.prototype.bounds = function () {
 
 
 }
+
+
+Point.prototype.mixColor = function(colour) {
+  this.colour = lerpColor(this.colour, colour, 0.5);
+
+  this.charge = (hue(this.colour) - 180) /// 180;
+}
+

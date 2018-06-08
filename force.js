@@ -12,10 +12,10 @@ function pointForce(force, filter = null) {
   }
 }
 
-function pairForce(force, filter = null) {
+function pairForce(force, filter = null, ...params) {
   if (filter) {
     return (p1, p2) => {
-      if (filter(p1, p2)) {
+      if (filter(p1, p2, ...params)) {
         force(p1, p2);
       }
     }

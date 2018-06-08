@@ -1,30 +1,19 @@
-function attract(p1, p2, constant = 10, field = 'mass') {
-  var pointer = p5.Vector.sub(p2.position, p1.position).normalize();
-  let distance = p2.position.dist(p1.position);
-  let force = (p1[field] * p2[field] * constant) / (distance * distance);
-  pointer.mult(force);
+//var nuclearSystem = createForcePairs(nuclear, 30, -20);
+// var gravitySystem = createForcePairs(gravity, -10, 100, -100000000000)
+// var gravityMagnetSystem = createForcePairs(gravAndMag, -10, 100000000000);
 
-  p2.acceleration.add(p5.Vector.div(pointer, p2.mass));
-  p1.acceleration.add(p5.Vector.div(pointer, p1.mass).rotate(PI / 2));
-}
+//var gravitySystem = createForcePairs(attract, -10);
 
-function nuclear(p1, p2, range = 10, constant) {
-  var distance = p2.position.dist(p1.position);
-  if (distance < range) {
-    attract(p1, p2, constant);
-  }
-}
+// var nuclearSystem = createForcePairs(pairForce(attract, (p1, p2) => {
+//   var distance = p2.position.dist(p1.position);
+//   return (distance < (p1.radius + p2.radius))
+// }), 1000000);
+var magnetSystem = createForcePairs(attract, 100, 'charge');
 
 
-function gravity(p1, p2, constant = -10, range = 10, nuclearConstant = -100) {
-  attract(p1, p2, constant);
-  nuclear(p1, p2, range, nuclearConstant);
-}
+var connectionSystem = createForcePairs(pairForce(drawPointLine, rangeFilter, 100));
 
-function gravAndMag(p1, p2, grav = -10, mag = 10000) {
-  attract(p1, p2, grav, 'mass');
-  attract(p1, p2, mag, 'charge');
-}
+//var drawSystem = createForcePoints(point => point.show())
 
 
 function absorb(points) {
@@ -63,7 +52,7 @@ function absorb(points) {
 
             points[eater].radius = sqrt((eatenArea + eaterArea) / PI)
 
-            //points[eater].mixColor(points[eaten]._color)
+            points[eater].mixColor(points[eaten].colour)
 
             //points[eater].velocity.add(points[eaten].velocity)
 
@@ -86,19 +75,6 @@ function cleanup(points) {
 }
 
 
-//var gravitySystem = createForcePairs(attract, -10);
 
-// var nuclearSystem = createForcePairs(pairForce(attract, (p1, p2) => {
-//   var distance = p2.position.dist(p1.position);
-//   return (distance < (p1.radius + p2.radius))
-// }), 1000000);
 
-//var nuclearSystem2 = createForcePairs(pairForce(attract, (p1, p2) => {
-// var distance = p2.position.dist(p1.position);
-// return (distance < (p1.radius + p2.radius) * 6 && distance > (p1.radius + p2.radius)) 
-//}), -1000000);
 
-//var nuke = function (p1, p2) {
-//  nuclearSystem(p1, p2);
-//  nuclearSystem2(p1, p2);
-//}
