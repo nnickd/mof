@@ -6,7 +6,7 @@ function Point(options = {}) {
   //this.mass = random([50, 50, 50, 50, 100, 100, 100, 150]);
   this.mass = 100;
   // this.charge = random([-1, 1]);
-  this.spin = random([-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2]);
+  this.spin = random([-.002, -.0015, -.001, -.005, 0, .005, .001, .0015, .002]);
 
   // this.colour = color(random([190, 200, 210]), random([25, 35, 45]), random([60, 70, 80]));
   // this.colour = color(random([0, 128, 255]), random([0, 128, 255]), random([0, 128, 255]));
@@ -17,11 +17,12 @@ function Point(options = {}) {
   this.colour = color(random() * 360, 100, 100);
   pop();
   // debugger;
-  this.charge = (hue(this.colour) - 180)// / 180;
+  this.colorCharge();
   this.radius = 10;
 
   this.maxSpeed = 10;
   this.dead = false;
+  this.points = [];
 
 
   for (var option of Object.keys(options)) {
@@ -34,6 +35,8 @@ Point.prototype.tick = function () {
   this.velocity.limit(this.maxSpeed);
   this.position.add(this.velocity);
   this.acceleration.mult(0);
+
+  this.velocity.rotate(this.spin * PI);
 }
 
 Point.prototype.show = function () {
@@ -42,7 +45,9 @@ Point.prototype.show = function () {
   noStroke()
   colorMode(HSB, 360, 100, 100);
   fill(this.colour);
+  
   ellipse(this.position.x, this.position.y, this.radius);
+  rotate(this.spin * PI)
   // text(this.charge, this.position.x + this.radius, this.position.y + this.radius)
   pop();
 }
@@ -52,30 +57,47 @@ Point.prototype.update = function () {
 
   this.bounds();
   this.show();
+
+  if (this.space) {
+    this.space.update();
+  }
 }
 
 Point.prototype.bounds = function () {
-  if (this.position.x < (-width / 2) - this.radius) this.position.x = (width / 2) + this.radius;
-  if (this.position.x > (width / 2) + this.radius) this.position.x = (-width / 2) - this.radius;
-  if (this.position.y < (-height / 2) - this.radius) this.position.y = (height / 2) + this.radius;
-  if (this.position.y > (height / 2) + this.radius) this.position.y = (-height / 2) - this.radius;
 
-  if (this.position.x < (-width / 2) + this.radius) {
-    this.velocity.x *= -1;
-    //this.position.x = (-width / 2) + this.radius;
+  if (
+    this.position.x <= (-width / 2) - this.radius ||
+    this.position.x >= (width / 2) + this.radius ||
+    this.position.y <= (-height / 2) - this.radius ||
+    this.position.y >= (height / 2) + this.radius
+  ) {
+    this.position.x = 0;
+    this.position.y = 0;
   }
-  if (this.position.x > (width / 2) - this.radius) {
-    this.velocity.x *= -1;
-    //this.position.x = (width / 2) - this.radius;
-  }
-  if (this.position.y < (-height / 2) + this.radius) {
-    this.velocity.y *= -1;
-    //this.position.y = (-height / 2) + this.radius;
-  }
-  if (this.position.y > (height / 2) - this.radius) {
-    this.velocity.y *= -1;
-    //this.position.y = (height / 2) - this.radius;
-  }
+
+
+
+  // if (this.position.x <= (-width / 2) - this.radius) this.position.x = (width / 2) + this.radius;
+  // if (this.position.x >= (width / 2) + this.radius) this.position.x = (-width / 2) - this.radius;
+  // if (this.position.y <= (-height / 2) - this.radius) this.position.y = (height / 2) + this.radius;
+  // if (this.position.y >= (height / 2) + this.radius) this.position.y = (-height / 2) - this.radius;
+
+  // if (this.position.x <= (-width / 2) + this.radius) {
+  //   this.velocity.x *= -1;
+  //   //this.position.x = (-width / 2) + this.radius;
+  // }
+  // if (this.position.x >= (width / 2) - this.radius) {
+  //   this.velocity.x *= -1;
+  //   //this.position.x = (width / 2) - this.radius;
+  // }
+  // if (this.position.y <= (-height / 2) + this.radius) {
+  //   this.velocity.y *= -1;
+  //   //this.position.y = (-height / 2) + this.radius;
+  // }
+  // if (this.position.y >= (height / 2) - this.radius) {
+  //   this.velocity.y *= -1;
+  //   //this.position.y = (height / 2) - this.radius;
+  // }
 
 
 }
@@ -84,6 +106,9 @@ Point.prototype.bounds = function () {
 Point.prototype.mixColor = function(colour) {
   this.colour = lerpColor(this.colour, colour, 0.5);
 
-  this.charge = (hue(this.colour) - 180) /// 180;
+  this.colorCharge();
 }
 
+Point.prototype.colorCharge = function() {
+  this.charge = (hue(this.colour) - 180);
+}

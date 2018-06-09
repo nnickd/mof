@@ -40,27 +40,11 @@ function groupForce(force, filter = null) {
   }
 }
 
-function forcePoints(points, force) {
-  for (var i = 0; i < points.length; i++) {
-    force(points[i]);
-  }
-}
-
 function createForcePoints(force, ...params) {
   return (points) => {
     for (var i = 0; i < points.length; i++) {
       force(points[i]);
     }
-  }
-}
-
-function forcePairs(points, force) {
-  var idx = 1;
-  for (var i = 0; i < points.length; i++) {
-    for (var j = idx; j < points.length; j++) {
-      force(points[i], points[j]);
-    }
-    idx++;
   }
 }
 
@@ -73,6 +57,22 @@ function createForcePairs(force, ...params) {
       }
       idx++;
     }
+  }
+}
+
+function forcePoints(points, force) {
+  for (var i = 0; i < points.length; i++) {
+    force(points[i]);
+  }
+}
+
+function forcePairs(points, force) {
+  var idx = 1;
+  for (var i = 0; i < points.length; i++) {
+    for (var j = idx; j < points.length; j++) {
+      force(points[i], points[j]);
+    }
+    idx++;
   }
 }
 
@@ -93,3 +93,4 @@ function forceGroups(groups, force) {
 //  }
 //  return pairs;
 //}
+

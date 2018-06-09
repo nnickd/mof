@@ -2,16 +2,16 @@
 // var gravitySystem = createForcePairs(gravity, -10, 100, -100000000000)
 // var gravityMagnetSystem = createForcePairs(gravAndMag, -10, 100000000000);
 
-//var gravitySystem = createForcePairs(attract, -10);
+// var gravitySystem = createForcePairs(attract, -100000000);
 
 // var nuclearSystem = createForcePairs(pairForce(attract, (p1, p2) => {
 //   var distance = p2.position.dist(p1.position);
 //   return (distance < (p1.radius + p2.radius))
-// }), 1000000);
+// }), 100000000000000);
 var magnetSystem = createForcePairs(attract, 100, 'charge');
 
 
-var connectionSystem = createForcePairs(pairForce(drawPointLine, rangeFilter, 100));
+var connectionSystem = createForcePairs(pairForce(drawPointLine, rangeFilter, 150));
 
 //var drawSystem = createForcePoints(point => point.show())
 
@@ -23,7 +23,8 @@ function absorb(points) {
       for (let j in points) {
         //if (i != j && !points[j].dead && points[i].color.toString() == points[j].color.toString()) {
         if (i != j && !points[j].dead) {
-          if ((points[i].radius + points[j].radius) / 2 > p5.Vector.sub(points[i].position, points[j].position).mag()) {
+          // if (points[i].position.x == points[j].position.x && points[i].position.y == points[j].position.y) {
+          if ((points[i].radius + points[j].radius) / 2 > p5.Vector.dist(points[i].position, points[j].position)) {
             let eaten = i;
             let eater = j;
             if (points[i].radius > points[j].radius) {
@@ -45,14 +46,40 @@ function absorb(points) {
             //debugger
             points[eaten].dead = true;
             points[eater].mass += points[eaten].mass;
-
-
             let eatenArea = PI * points[eaten].radius * points[eaten].radius;
             let eaterArea = PI * points[eater].radius * points[eater].radius;
+            points[eater].radius = sqrt((eatenArea + eaterArea) / PI);
+            points[eater].mixColor(points[eaten].colour);
 
-            points[eater].radius = sqrt((eatenArea + eaterArea) / PI)
+            if (points[eaten].space) {
+              if (!points[eater].space) {
+                points[eater].space = new Space([], [innerGravitySystem, connectionSystem, absorb, cleanup])
+              }
 
-            points[eater].mixColor(points[eaten].colour)
+              for (var p = 0; p < points[eaten].space.points.length; p++) {
+                var child = points[eaten].space.points.pop();
+                child.colour = points[eater].colour; 
+                points[eater].space.points.push(child);
+              }
+            }
+            // let childArea = -PI * points[eaten].radius * points[eaten].radius;
+            // eaterArea = -childArea;
+            
+            // let recurse = (parent) => {
+            //   if (parent.space && parent.space.points.length > 0) {
+            //     debugger;
+            //     for (var p = 0; p < parent.space.points.length; p++) {
+            //       childArea += recurse(parent.space.points[p]);
+            //     }
+            //   } else {
+                
+            //     childArea += PI * parent.radius * parent.radius;
+            //   }
+            // }
+            // eatenArea = recurse(points[eater]);
+            // points[eater].radius = sqrt((eatenArea + eaterArea) / PI);
+            // points[eater].mixColor(points[eaten].colour);
+
 
             //points[eater].velocity.add(points[eaten].velocity)
 
