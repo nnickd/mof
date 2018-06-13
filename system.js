@@ -8,10 +8,16 @@
 //   var distance = p2.position.dist(p1.position);
 //   return (distance < (p1.radius + p2.radius))
 // }), 100000000000000);
-var magnetSystem = createForcePairs(attract, 100, 'charge');
 
 
-var connectionSystem = createForcePairs(pairForce(drawPointLine, rangeFilter, 150));
+// var gravitySystem = createForcePairs(attract, -10);
+// // var innerGravitySystem = createForcePairs(attract, 10000);
+// var innerGravitySystem = createForcePairs(gravity, -100, 100, 10000)
+
+// var magnetSystem = createForcePairs(attract, 100, 'charge');
+
+
+// var connectionSystem = createForcePairs(pairForce(drawPointLine, rangeFilter, 150));
 
 //var drawSystem = createForcePoints(point => point.show())
 

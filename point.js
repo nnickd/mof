@@ -65,39 +65,39 @@ Point.prototype.update = function () {
 
 Point.prototype.bounds = function () {
 
-  if (
-    this.position.x <= (-width / 2) - this.radius ||
-    this.position.x >= (width / 2) + this.radius ||
-    this.position.y <= (-height / 2) - this.radius ||
-    this.position.y >= (height / 2) + this.radius
-  ) {
-    this.position.x = 0;
-    this.position.y = 0;
+  // if (
+  //   this.position.x <= (-width / 2) - this.radius ||
+  //   this.position.x >= (width / 2) + this.radius ||
+  //   this.position.y <= (-height / 2) - this.radius ||
+  //   this.position.y >= (height / 2) + this.radius
+  // ) {
+  //   this.position.x = 0;
+  //   this.position.y = 0;
+  // }
+
+
+
+  if (this.position.x <= (-width / 2) - this.radius) this.position.x = (width / 2) + this.radius;
+  if (this.position.x >= (width / 2) + this.radius) this.position.x = (-width / 2) - this.radius;
+  if (this.position.y <= (-height / 2) - this.radius) this.position.y = (height / 2) + this.radius;
+  if (this.position.y >= (height / 2) + this.radius) this.position.y = (-height / 2) - this.radius;
+
+  if (this.position.x <= (-width / 2) + this.radius) {
+    this.velocity.x *= -1;
+    //this.position.x = (-width / 2) + this.radius;
   }
-
-
-
-  // if (this.position.x <= (-width / 2) - this.radius) this.position.x = (width / 2) + this.radius;
-  // if (this.position.x >= (width / 2) + this.radius) this.position.x = (-width / 2) - this.radius;
-  // if (this.position.y <= (-height / 2) - this.radius) this.position.y = (height / 2) + this.radius;
-  // if (this.position.y >= (height / 2) + this.radius) this.position.y = (-height / 2) - this.radius;
-
-  // if (this.position.x <= (-width / 2) + this.radius) {
-  //   this.velocity.x *= -1;
-  //   //this.position.x = (-width / 2) + this.radius;
-  // }
-  // if (this.position.x >= (width / 2) - this.radius) {
-  //   this.velocity.x *= -1;
-  //   //this.position.x = (width / 2) - this.radius;
-  // }
-  // if (this.position.y <= (-height / 2) + this.radius) {
-  //   this.velocity.y *= -1;
-  //   //this.position.y = (-height / 2) + this.radius;
-  // }
-  // if (this.position.y >= (height / 2) - this.radius) {
-  //   this.velocity.y *= -1;
-  //   //this.position.y = (height / 2) - this.radius;
-  // }
+  if (this.position.x >= (width / 2) - this.radius) {
+    this.velocity.x *= -1;
+    //this.position.x = (width / 2) - this.radius;
+  }
+  if (this.position.y <= (-height / 2) + this.radius) {
+    this.velocity.y *= -1;
+    //this.position.y = (-height / 2) + this.radius;
+  }
+  if (this.position.y >= (height / 2) - this.radius) {
+    this.velocity.y *= -1;
+    //this.position.y = (height / 2) - this.radius;
+  }
 
 
 }
