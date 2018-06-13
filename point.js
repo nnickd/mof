@@ -36,7 +36,7 @@ Point.prototype.tick = function () {
   this.position.add(this.velocity);
   this.acceleration.mult(0);
 
-  this.velocity.rotate(this.spin * PI);
+  // this.velocity.rotate(this.spin * PI);
 }
 
 Point.prototype.show = function () {
@@ -75,29 +75,53 @@ Point.prototype.bounds = function () {
   //   this.position.y = 0;
   // }
 
+  // if (this.position.x <= (-width / 2) - this.radius)  {
+
+  // }
 
 
-  if (this.position.x <= (-width / 2) - this.radius) this.position.x = (width / 2) + this.radius;
-  if (this.position.x >= (width / 2) + this.radius) this.position.x = (-width / 2) - this.radius;
-  if (this.position.y <= (-height / 2) - this.radius) this.position.y = (height / 2) + this.radius;
-  if (this.position.y >= (height / 2) + this.radius) this.position.y = (-height / 2) - this.radius;
-
-  if (this.position.x <= (-width / 2) + this.radius) {
+  if (this.position.x < -(width / 2)) {
+    this.position.x = -(width / 2);
     this.velocity.x *= -1;
-    //this.position.x = (-width / 2) + this.radius;
   }
-  if (this.position.x >= (width / 2) - this.radius) {
+
+  else if (this.position.x > (width / 2)) {
+    this.position.x = (width / 2);
     this.velocity.x *= -1;
-    //this.position.x = (width / 2) - this.radius;
   }
-  if (this.position.y <= (-height / 2) + this.radius) {
+  if (this.position.y < -(height / 2)) {
+    this.position.y = -(height / 2);
     this.velocity.y *= -1;
-    //this.position.y = (-height / 2) + this.radius;
   }
-  if (this.position.y >= (height / 2) - this.radius) {
+
+  else if (this.position.y > (height / 2)) {
+    this.position.y = (height / 2);
     this.velocity.y *= -1;
-    //this.position.y = (height / 2) - this.radius;
   }
+
+
+
+  // if (this.position.x <= -(width / 4) - this.radius) this.position.x = (width / 4) + this.radius;
+  // if (this.position.x >= (width / 4) + this.radius) this.position.x = -(width / 4) - this.radius;
+  // if (this.position.y <= -(height / 4) - this.radius) this.position.y = (height / 4) + this.radius;
+  // if (this.position.y >= (height / 4) + this.radius) this.position.y = -(height / 4) - this.radius;
+
+  // if (this.position.x <= -(width / 4) - this.radius) {
+  //   this.velocity.x *= -1;
+  //   //this.position.x = (-width / 2) + this.radius;
+  // }
+  // if (this.position.x >= (width / 4) - this.radius) {
+  //   this.velocity.x *= -1;
+  //   //this.position.x = (width / 2) - this.radius;
+  // }
+  // if (this.position.y <= -(height / 4) + this.radius) {
+  //   this.velocity.y *= -1;
+  //   //this.position.y = (-height / 2) + this.radius;
+  // }
+  // if (this.position.y >= (height / 4) - this.radius) {
+  //   this.velocity.y *= -1;
+  //   //this.position.y = (height / 2) - this.radius;
+  // }
 
 
 }

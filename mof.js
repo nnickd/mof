@@ -8,26 +8,34 @@ transY = 0;
 
 
 var pairSystem = createForcePairs((p1, p2) => {
-  attract(p1, p2, -100, 'charge');
+    attract(p1, p2, -1000, 'charge')
+  if (rangeFilter(p1, p2, 2 * (p1.radius + p2.radius))) {
+    // p1.velocity.mult(-1)
+    // p2.velocity.mult(-1)
+    // attract(p1, p2, 100000, 'mass', true)
+  }
   connectForce(p1, p2);
-
 })
 
 var innerPairSystem = createForcePairs((p1, p2) => {
-  attract(p1, p2, -1, );
+  // if (!rangeFilter(p1, p2, 100)) {
+  // attract(p1, p2, 1000)
+    attract(p1, p2, -10)
+  // } else 
+  
+  if (rangeFilter(p1, p2, 2 * (p1.radius + p2.radius))) {
+    attract(p1, p2, 100)
+  }
   connectForce(p1, p2);
 })
 
 var spaceSystem = point => {
   for (var i = 0; i < point.space.points.length; i++) {
-    attract(point, point.space.points[i], 10)
-    connectForce(point, point.space.points[i]);
-
-    if (rangeFilter(point, point.space.points[i], 150) && !rangeFilter(point, point.space.points[i], 10)) {
-      attract(point, point.space.points[i], -100)
-    } else if (rangeFilter(point, point.space.points[i], 10)) {
-      attract(point, point.space.points[i], 10000)
+    attract(point, point.space.points[i], -100, 'mass', true)
+    if (rangeFilter(point, point.space.points[i], 2 * (point.radius + point.space.points[i].radius))) {
+      attract(point, point.space.points[i], 100000, 'mass', true)
     }
+    // connectForce(point, point.space.points[i]);
   }
 }
 
@@ -35,7 +43,7 @@ var spaceSystem = point => {
 function setup() {
   createCanvas(1920, 974);
   // space = new Space([], []);
-  space = new Space([], [pairSystem]);
+  space = new Space([], [pairSystem, absorb, cleanup]);
 
   pointStack = [];
   freeze = false;
@@ -53,7 +61,13 @@ function draw() {
 
 function mouseClicked() {
   if (mouseIsPressed) {
-    if (parentPoint && parentPoint.space.points.length > 12) {
+    if (parentPoint && parentPoint.space.points.length > 5) {
+      parentPoint.charge = 0;
+      parentPoint.mass = 0;
+      for (var p of parentPoint.space.points) {
+        parentPoint.charge += p.charge;
+        parentPoint.mass += p.mass;
+      }
       parentPoint = null;
     }
 
@@ -80,8 +94,8 @@ function mouseClicked() {
     } else {
       parentPoint = new Point({
         position: createVector(mouseX - (width / 2), mouseY - (height / 2)),
-        space: new Space([], [innerPairSystem]),
-        radius: 10
+        space: new Space([], [innerPairSystem, absorb, cleanup]),
+        radius: 6
       });
       pointStack.push(parentPoint);
       parentPoint.show();
@@ -90,6 +104,13 @@ function mouseClicked() {
 }
 
 function mouseReleased() {
+
+  parentPoint.charge = 0;
+  parentPoint.mass = 0;
+  for (var p of parentPoint.space.points) {
+    parentPoint.charge += p.charge;
+    parentPoint.mass += p.mass;
+  }
   parentPoint = null;
 }
 
