@@ -1,4 +1,4 @@
-function attract(p1, p2, constant = 10, field = 'mass', oneway = false) {
+function attract(p1, p2, constant = 10, field = 'mass') {
     var pointer = p5.Vector.sub(p2.position, p1.position).normalize();
     let distance = p2.position.dist(p1.position);
     let force = (p1[field] * p2[field] * constant) / (distance * distance);
@@ -6,9 +6,17 @@ function attract(p1, p2, constant = 10, field = 'mass', oneway = false) {
 
 
     p2.acceleration.add(p5.Vector.div(pointer, p2.mass));
-    if (!oneway) {
-        p1.acceleration.add(p5.Vector.div(pointer, p1.mass).rotate(PI / 2));
-    }
+    p1.acceleration.add(p5.Vector.div(pointer, p1.mass).rotate(PI / 2));
+}
+
+function follow(p1, p2, constant = 10, field = 'mass') {
+    var pointer = p5.Vector.sub(p2.position, p1.position).add(p1.velocity).normalize();
+    let distance = p2.position.dist(p1.position);
+    let force = (p1[field] * p2[field] * constant) / (distance * distance);
+    pointer.mult(force);
+
+
+    p2.acceleration.add(p5.Vector.div(pointer, p2.mass));
 }
 
 function retract(p1, p2, constant = 10, field = 'mass') {

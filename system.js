@@ -24,7 +24,7 @@
 
 function absorb(points) {
   for (let i in points) {
-    if (!points[i].dead) {
+    if (!points[i].deads) {
 
       for (let j in points) {
         //if (i != j && !points[j].dead && points[i].color.toString() == points[j].color.toString()) {
@@ -50,27 +50,31 @@ function absorb(points) {
               eater = i;
             }
             //debugger
-            points[eaten].dead = true;
-            points[eater].mass += points[eaten].mass;
-            let eatenArea = PI * points[eaten].radius * points[eaten].radius;
-            let eaterArea = PI * points[eater].radius * points[eater].radius;
-            points[eater].radius = sqrt((eatenArea + eaterArea) / PI);
-            points[eater].mixColor(points[eaten].colour);
+            if (points[eater].radius < 20) {
 
-            if (points[eaten].space) {
-              if (!points[eater].space) {
-                points[eater].space = new Space([], [innerGravitySystem, connectionSystem, absorb, cleanup])
-              }
 
-              for (var p = 0; p < points[eaten].space.points.length; p++) {
-                var child = points[eaten].space.points.pop();
-                child.colour = points[eater].colour; 
-                points[eater].space.points.push(child);
+              points[eaten].dead = true;
+              points[eater].mass += points[eaten].mass;
+              let eatenArea = PI * points[eaten].radius * points[eaten].radius;
+              let eaterArea = PI * points[eater].radius * points[eater].radius;
+              points[eater].radius = sqrt((eatenArea + eaterArea) / PI);
+              points[eater].mixColor(points[eaten].colour);
+
+              if (points[eaten].space) {
+                if (!points[eater].space) {
+                  points[eater].space = new Space([], [innerGravitySystem, connectionSystem, absorb, cleanup])
+                }
+
+                for (var p = 0; p < points[eaten].space.points.length; p++) {
+                  var child = points[eaten].space.points.pop();
+                  child.colour = points[eater].colour;
+                  points[eater].space.points.push(child);
+                }
               }
             }
             // let childArea = -PI * points[eaten].radius * points[eaten].radius;
             // eaterArea = -childArea;
-            
+
             // let recurse = (parent) => {
             //   if (parent.space && parent.space.points.length > 0) {
             //     debugger;
@@ -78,7 +82,7 @@ function absorb(points) {
             //       childArea += recurse(parent.space.points[p]);
             //     }
             //   } else {
-                
+
             //     childArea += PI * parent.radius * parent.radius;
             //   }
             // }
