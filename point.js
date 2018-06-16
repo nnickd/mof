@@ -50,6 +50,26 @@ Point.prototype.show = function () {
   rotate(this.spin * PI)
   // text(this.charge, this.position.x + this.radius, this.position.y + this.radius)
   pop();
+
+//   push();
+//   translate((width / 2) + this.position.x, (height / 2) + this.position.y);
+//   noStroke()
+//   colorMode(HSB, 360, 100, 100);
+//   fill(this.colour);
+
+//   var mid = this.velocity.copy().normalize().mult(this.radius);
+//   var left = mid.copy().rotate(-PI * 2 / 3);
+//   var right = mid.copy().rotate(PI * 2 / 3);
+  
+
+//   triangle(left.x, left.y, mid.x, mid.y, right.x, right.y);
+//   triangle(-left.x, -left.y, -mid.x, -mid.y, -right.x, -right.y);
+
+// // stroke(33)
+// //   bezier(left.x, left.y, mid.x, mid.y, right.x, right.y, -left.x, -left.y)
+//   // rotate(this.spin * PI)
+//   // text(this.charge, this.position.x + this.radius, this.position.y + this.radius)
+//   pop();
 }
 
 Point.prototype.update = function () {
