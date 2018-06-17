@@ -1,5 +1,5 @@
 
-var connectRange = 100;
+var connectRange = 150;
 var connectForce = pairForce(drawPointLine, rangeFilter, connectRange);
 
  
@@ -10,11 +10,11 @@ var pairSystem = createForcePairs((p1, p2) => {
   // attract(p1, p2, -100000, 'charge')
 
   if (!rangeFilter(p1, p2, connectRange)) {
-    attract(p1, p2, -100000000, 'mass')
+    attract(p1, p2, -20000000, 'mass')
     
   } else {
     
-    attract(p1, p2, 100000000, 'mass')
+    attract(p1, p2, 10000000, 'mass')
   }
 
 
@@ -50,14 +50,14 @@ var pairSystem = createForcePairs((p1, p2) => {
 var innerPairSystem = createForcePairs((p1, p2) => {
 
   attract(p1, p2, 100, 'charge')
-  // if (!rangeFilter(p1, p2, 10 * (p1.radius + p2.radius))) {
-  //   // attract(p1, p2, 1000)
-  //   attract(p1, p2, -100)
-  // } else 
-  
-  // if (rangeFilter(p1, p2, 10 * (p1.radius + p2.radius))) {
-  //   attract(p1, p2, 100)
-  // }
+
+    // if (!rangeFilter(p1, p2, connectRange / 3)) {
+    //   attract(p1, p2, -10000, 'mass')
+
+    // } else {
+
+    //   attract(p1, p2, 10000, 'mass')
+    // }
   connectForce(p1, p2);
 })
 
@@ -74,7 +74,7 @@ var spaceSystem = point => {
 
 
   for (var i = 0; i < point.space.points.length; i++) {
-    attract(point, point.space.points[i], -1000, 'mass')
+    attract(point, point.space.points[i], -1000000, 'mass')
 
     // follow(point, point.space.points[i], -10, 'mass')
     // follow(point.space.points[i], point, 100, 'mass')
