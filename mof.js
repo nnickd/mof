@@ -1,44 +1,24 @@
+var connectRange = 100
+var drawRange = 50
+var connectForce = pairForce(drawPointLine, rangeFilter, drawRange);
 
-var connectRange = 300;
-var connectForce = pairForce(drawPointLine, rangeFilter, connectRange);
-
+var pairConnectForce = pairForce(drawPointLine, rangeFilter, drawRange);
 var pairSystem = createForcePairs((p1, p2) => {
   // attract(p1, p2, -100000, 'charge')
-  if (!rangeFilter(p1, p2, connectRange)) {
-    attract(p1, p2, -200000000, 'mass')
-    // attract(p1, p2, -100000000, 'charge')
-  } else {
-    attract(p1, p2, 100000000, 'mass')
-    // attract(p1, p2, 200000000, 'charge')
-  }
-  // attract(p1, p2, -10000, 'mass')
-  // if (rangeFilter(p1, p2, 1)) {
-  //   // p1.velocity.mult(-1)
-  //   // p2.velocity.mult(-1)
-
-    // if (p1.space && p2.space) {
-    //   absorb(p1.space.points.concat(p2.space.points))
-    //   cleanup(p1.space.points.concat(p2.space.points))
-    //   mergeSystem(p1.space.points.concat(p2.space.points));
+  // if (time % 3 == 0) {
+    
+    if (!rangeFilter(p1, p2, connectRange)) {
+      attract(p1, p2, -200000000, 'mass')
+      // attract(p1, p2, -100000000, 'charge')
+    } else {
+      attract(p1, p2, 100000000, 'mass')
+      // attract(p1, p2, 200000000, 'charge')
+    }
     // }
-  //   // attract(p1, p2, 100000000000000000, 'mass', true)
-  // }
-  connectForce(p1, p2);
-})
-
-// var mergeSystem = createForcePairs((p1, p2) => {
-//   // if (!rangeFilter(p1, p2, 100)) {
-//   // attract(p1, p2, 1000)
-//   attract(p1, p2, -10000, 'mass')
-//   // } else 
-
-
-//   // connectForce(p1, kp2);
-// })
-
-
-
-
+    pairConnectForce(p1, p2);
+  })
+  
+var innerConnectForce = pairForce(drawPointLine, rangeFilter, 200);
 var innerPairSystem = createForcePairs((p1, p2) => {
   attract(p1, p2, 100, 'charge')
     // if (!rangeFilter(p1, p2, connectRange / 3)) {
@@ -48,7 +28,7 @@ var innerPairSystem = createForcePairs((p1, p2) => {
 
     //   attract(p1, p2, 10000, 'mass')
     // }
-  connectForce(p1, p2);
+  innerConnectForce(p1, p2);
 })
 
 var spaceSystem = point => {
@@ -75,7 +55,8 @@ var spaceSystem = point => {
 function setup() {
   createCanvas(1920, 974);
   // space = new Space([], []);
-  space = new Space([], [pairSystem]);//, absorb, cleanup]);
+  space = new Space([], [pairSystem]);
+  // space = new Space([], [pairSystem, absorb, cleanup]);
 
   pointStack = [];
   freeze = false;
@@ -90,7 +71,9 @@ function draw() {
     space.points.push(pointStack.pop());
   }
 
-  space.update(spaceSystem);
+  // if (time % 2 == 0) {
+    space.update(spaceSystem);
+  // }
 
   time++;
 }
