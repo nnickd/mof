@@ -15,6 +15,7 @@ function Point(options = {}) {
   push();
   colorMode(HSB, 360, 100, 100);
   this.colour = color(random() * 360, 100, 100);
+  // this.colour = color(random([60, 120, 180, 240, 300, 360]), 100, 100);
   pop();
   // debugger;
   this.radius = 10;
@@ -112,7 +113,7 @@ Point.prototype.mixColor = function(colour) {
 }
 
 Point.prototype.colorCharge = function() {
-  this.charge = (hue(this.colour) - 180);
+  this.charge = (hue(this.colour) - 179);
 }
 
 Point.prototype.addChildren = function (maxGroup) {
