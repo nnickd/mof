@@ -1,15 +1,20 @@
 var connectRange = 100
-var drawRange = 100
+var drawRange = 50
 var connectForce = pairForce(drawPointLine, rangeFilter, drawRange);
+var defp = {
+  radius: 10, 
+  maxSpeed: 6,
+  mass: 30
+}
 
-var pairConnectForce = pairForce(drawPointLine, rangeFilter, drawRange);
+var pairConnectForce = pairForce(drawPointLine, rangeFilter, drawRange * 2);
 var pairSystem = createForcePairs((p1, p2) => {
 
-  if (!rangeFilter(p1, p2, connectRange)) {
-    attract(p1, p2, -1000, 'mass')
-  } else {
-    attract(p1, p2, 1000, 'mass')
-  }
+  // if (!rangeFilter(p1, p2, connectRange)) {
+    attract(p1, p2, -100, 'charge')
+  // } else {
+  //   attract(p1, p2, 100, 'charge')
+  // }
   pairConnectForce(p1, p2);
 })
 
@@ -74,9 +79,9 @@ var spaceSystem = point => {
 function setup() {
   createCanvas(1920, 974);
   // space = new Space([], []);
-  space = new Space([], [pairSystem]);
+  // space = new Space([], [pairSystem]);
   // space = new Space([], [pairSystem, centerForce]);
-  // space = new Space([], [pairSystem, absorb, cleanup]);
+  space = new Space([], [pairSystem, absorb, cleanup]);
 
   pointStack = [];
   freeze = false;
@@ -98,14 +103,20 @@ function draw() {
 }
 
 function mouseClicked() {
+  var ran = random() * 360;
+  console.log(ran)
+
+
   let parentPoint = new Point({
     position: createVector(mouseX - (width / 2), mouseY - (height / 2)),
     // space: new Space([], [innerPairSystem, centerForce]), //, absorb, cleanup]),
     space: new Space([], [innerPairSystem, innerParentSystem
       // , absorb, cleanup
     ]),
-    radius: 10,
-    maxSpeed: 3
+    radius: defp.radius,
+    maxSpeed: defp.maxSpeed,
+    mass: defp.mass,
+    // colour: color(ran, 100, 100)
   });
   pointStack.push(parentPoint);
   parentPoint.show();

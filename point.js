@@ -17,19 +17,19 @@ function Point(options = {}) {
   this.colour = color(random() * 360, 100, 100);
   pop();
   // debugger;
-  this.colorCharge();
   this.radius = 10;
-
+  
   this.maxSpeed = 10;
   this.dead = false;
   this.points = [];
-
+  
   this.flip = true;
-
-
+  
+  
   for (var option of Object.keys(options)) {
     this[option] = options[option];
   }
+  this.colorCharge();
 }
 
 Point.prototype.tick = function () {
@@ -48,7 +48,7 @@ Point.prototype.show = function () {
   colorMode(HSB, 360, 100, 100);
   fill(this.colour);
   
-  // ellipse(this.position.x, this.position.y, this.radius);
+  ellipse(this.position.x, this.position.y, this.radius);
   rotate(this.spin * PI)
   // text(this.charge, this.position.x + this.radius, this.position.y + this.radius)
   pop();
