@@ -4,31 +4,40 @@ var connectForce = pairForce(drawPointLine, rangeFilter, drawRange);
 
 var pairConnectForce = pairForce(drawPointLine, rangeFilter, drawRange);
 var pairSystem = createForcePairs((p1, p2) => {
-  // attract(p1, p2, -100000, 'charge')
-  // if (time % 3 == 0) {
 
   if (!rangeFilter(p1, p2, connectRange)) {
-    attract(p1, p2, -20000000000, 'mass')
-  //   // attract(p1, p2, -100000000, 'charge')
+    attract(p1, p2, -1000, 'mass')
   } else {
-    attract(p1, p2, 2000000000000, 'mass')
-  //   // attract(p1, p2, 200000000, 'charge')
+    attract(p1, p2, 1000, 'mass')
   }
-  // }
   pairConnectForce(p1, p2);
 })
 
 var innerConnectForce = pairForce(drawPointLine, rangeFilter, 200);
 var innerPairSystem = createForcePairs((p1, p2) => {
-  // attract(p1, p2, 1000, 'charge')
-  if (!rangeFilter(p1, p2, connectRange / 10)) {
-    attract(p1, p2, -1000000, 'mass')
+  // if (!rangeFilter(p1, p2, connectRange / 10)) {
+  //   attract(p1, p2, -1000000, 'mass')
 
-  } else {
+  // } else {
 
-    attract(p1, p2, 10000000000, 'mass')
+  //   attract(p1, p2, 1000, 'mass')
+  // }
+  // innerConnectForce(p1, p2);
+
+
+  // follow(p1, p1.parent);
+  // follow(p2, p2.parent);
+})
+
+
+var innerParentSystem = createForcePoints(point => {
+  if (point.parent) {
+    // debugger;
+    retract(point, point.parent, 100 -10000000);
+    follow(point.parent, point, -100);
+    // nuclear(point.parent, point, 10, 10000)
+    
   }
-  innerConnectForce(p1, p2);
 })
 
 
@@ -48,14 +57,8 @@ var centerForce = createForcePoints((point) => {
 
 
 var spaceSystem = point => {
-  // var mousePoint = new Point({ position: createVector(mouseX - (width / 2), mouseY - (height / 2)), mass: 100}); 
-  // // if (!rangeFilter(mousePoint, point, 200)) {
-  //   follow(mousePoint, point, -100000000);
 
-  // } else {
-  // follow(mousePoint, point, 100000);
 
-  // }
   for (var i = 0; i < point.space.points.length; i++) {
     attract(point, point.space.points[i], -1000000, 'mass')
     // follow(point, point.space.points[i], -10, 'mass')
@@ -71,13 +74,14 @@ var spaceSystem = point => {
 function setup() {
   createCanvas(1920, 974);
   // space = new Space([], []);
-  // space = new Space([], [pairSystem]);
+  space = new Space([], [pairSystem]);
   // space = new Space([], [pairSystem, centerForce]);
-  space = new Space([], [pairSystem, absorb, cleanup]);
+  // space = new Space([], [pairSystem, absorb, cleanup]);
 
   pointStack = [];
   freeze = false;
-  maxGroup = 6;
+  absorbOn = true;
+  maxGroup = 0;
 }
 
 function draw() {
@@ -87,6 +91,8 @@ function draw() {
   }
   // if (time % 2 == 0) {
   space.update(spaceSystem);
+
+  
   // }
 
 }
@@ -95,13 +101,17 @@ function mouseClicked() {
   let parentPoint = new Point({
     position: createVector(mouseX - (width / 2), mouseY - (height / 2)),
     // space: new Space([], [innerPairSystem, centerForce]), //, absorb, cleanup]),
-    space: new Space([], [innerPairSystem, absorb, cleanup]),
+    space: new Space([], [innerPairSystem, innerParentSystem
+      // , absorb, cleanup
+    ]),
     radius: 10,
     maxSpeed: 3
   });
   pointStack.push(parentPoint);
   parentPoint.show();
-  parentPoint.addChildren(maxGroup);
+  // parentPoint.addChildren(maxGroup);
+
+  // parentPoint.addChildren(random() * maxGroup);
 }
 
 
@@ -130,5 +140,22 @@ function keyPressed() {
   } else if (keyCode === DOWN_ARROW) {
     maxGroup--;
     // console.log('maxGroup: ', maxGroup)
+  } else if (keyCode === LEFT_ARROW) {
+    if (absorbOn === true) {
+      for (let p of space.points) {
+        p.space.systems.push(absorb)
+        p.space.systems.push(cleanup)
+      }
+    }
+    absorbOn = false;
+  } else if (keyCode === RIGHT_ARROW) {
+    if (absorbOn === false) {
+
+      for (let p of space.points) {
+      p.space.systems.pop()
+      p.space.systems.pop()
+      }
+    }
+    absorbOn = true;
   }
 }

@@ -10,6 +10,7 @@ function attract(p1, p2, constant = 10, field = 'mass') {
 }
 
 function follow(p1, p2, constant = 10, field = 'mass') {
+    debugger;
     var pointer = p5.Vector.sub(p2.position, p1.position).add(p1.velocity).normalize();
     let distance = p2.position.dist(p1.position);
     let force = (p1[field] * p2[field] * constant) / (distance * distance);
