@@ -2,6 +2,7 @@
 function Space(points = [], systems = []) {
   this.points = points;
   this.systems = systems;
+  this.time = 0;
 }
 
 Space.prototype.update = function (_pointForce = null) {
@@ -14,4 +15,5 @@ Space.prototype.update = function (_pointForce = null) {
       _pointForce(this.points[i]);
     }
   }
+  this.time++;
 }

@@ -24,6 +24,8 @@ function Point(options = {}) {
   this.dead = false;
   this.points = [];
 
+  this.flip = true;
+
 
   for (var option of Object.keys(options)) {
     this[option] = options[option];
@@ -51,25 +53,25 @@ Point.prototype.show = function () {
   // text(this.charge, this.position.x + this.radius, this.position.y + this.radius)
   pop();
 
-//   push();
-//   translate((width / 2) + this.position.x, (height / 2) + this.position.y);
-//   noStroke()
-//   colorMode(HSB, 360, 100, 100);
-//   fill(this.colour);
+  push();
+  translate((width / 2) + this.position.x, (height / 2) + this.position.y);
+  noStroke()
+  colorMode(HSB, 360, 100, 100);
+  fill(this.colour);
 
-//   var mid = this.velocity.copy().normalize().mult(this.radius);
-//   var left = mid.copy().rotate(-PI * 2 / 3);
-//   var right = mid.copy().rotate(PI * 2 / 3);
+  var mid = this.velocity.copy().normalize().mult(this.radius);
+  var left = mid.copy().rotate(-PI * 2 / 3);
+  var right = mid.copy().rotate(PI * 2 / 3);
   
 
-//   triangle(left.x, left.y, mid.x, mid.y, right.x, right.y);
-//   triangle(-left.x, -left.y, -mid.x, -mid.y, -right.x, -right.y);
+  triangle(left.x, left.y, mid.x, mid.y, right.x, right.y);
+  triangle(-left.x, -left.y, -mid.x, -mid.y, -right.x, -right.y);
 
-// // stroke(33)
-// //   bezier(left.x, left.y, mid.x, mid.y, right.x, right.y, -left.x, -left.y)
-//   // rotate(this.spin * PI)
-//   // text(this.charge, this.position.x + this.radius, this.position.y + this.radius)
-//   pop();
+// stroke(33)
+//   bezier(left.x, left.y, mid.x, mid.y, right.x, right.y, -left.x, -left.y)
+  // rotate(this.spin * PI)
+  // text(this.charge, this.position.x + this.radius, this.position.y + this.radius)
+  pop();
 }
 
 Point.prototype.update = function () {
@@ -84,22 +86,6 @@ Point.prototype.update = function () {
 }
 
 Point.prototype.bounds = function () {
-
-  // if (
-  //   this.position.x <= (-width / 2) - this.radius ||
-  //   this.position.x >= (width / 2) + this.radius ||
-  //   this.position.y <= (-height / 2) - this.radius ||
-  //   this.position.y >= (height / 2) + this.radius
-  // ) {
-  //   this.position.x = 0;
-  //   this.position.y = 0;
-  // }
-
-  // if (this.position.x <= (-width / 2) - this.radius)  {
-
-  // }
-
-
   if (this.position.x < -(width / 2)) {
     this.position.x = -(width / 2);
     this.velocity.x *= -1;
@@ -118,32 +104,6 @@ Point.prototype.bounds = function () {
     this.position.y = (height / 2);
     this.velocity.y *= -1;
   }
-
-
-
-  // if (this.position.x <= -(width / 4) - this.radius) this.position.x = (width / 4) + this.radius;
-  // if (this.position.x >= (width / 4) + this.radius) this.position.x = -(width / 4) - this.radius;
-  // if (this.position.y <= -(height / 4) - this.radius) this.position.y = (height / 4) + this.radius;
-  // if (this.position.y >= (height / 4) + this.radius) this.position.y = -(height / 4) - this.radius;
-
-  // if (this.position.x <= -(width / 4) - this.radius) {
-  //   this.velocity.x *= -1;
-  //   //this.position.x = (-width / 2) + this.radius;
-  // }
-  // if (this.position.x >= (width / 4) - this.radius) {
-  //   this.velocity.x *= -1;
-  //   //this.position.x = (width / 2) - this.radius;
-  // }
-  // if (this.position.y <= -(height / 4) + this.radius) {
-  //   this.velocity.y *= -1;
-  //   //this.position.y = (-height / 2) + this.radius;
-  // }
-  // if (this.position.y >= (height / 4) - this.radius) {
-  //   this.velocity.y *= -1;
-  //   //this.position.y = (height / 2) - this.radius;
-  // }
-
-
 }
 
 
@@ -155,4 +115,33 @@ Point.prototype.mixColor = function(colour) {
 
 Point.prototype.colorCharge = function() {
   this.charge = (hue(this.colour) - 180);
+}
+
+Point.prototype.addChildren = function (maxGroup) {
+  for (var i = 0; i < maxGroup; i++) {
+    point = new Point({
+      position: createVector(mouseX - (width / 2) + random(), mouseY - (height / 2) + random()),
+      colour: this.colour,
+      radius: this.radius,
+      maxSpeed: 6
+    });
+    push();
+    colorMode(HSB, 360, 100, 100);
+    var c = hue(point.colour) + this.space.points.length * 60;
+    while (c > 360) {
+      c -= 360;
+    }
+    point.colour = color(c, 60, 75);
+    pop();
+    this.space.points.push(point)
+    point.show();
+  }
+
+
+  this.charge = 0;
+  this.mass = 0;
+  for (var p of this.space.points) {
+    this.charge += p.charge * 2;
+    this.mass += p.mass * 2;
+  }
 }
