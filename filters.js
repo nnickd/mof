@@ -1,6 +1,6 @@
-function rangeFilter(p1, p2, range) {
+function rangeFilter(p1, p2, range, within = true) {
     var distance = p2.position.dist(p1.position);
-    return (distance < range);
+    return (within && distance < range) || (!within && distance > range);
 }
 
 

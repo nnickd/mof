@@ -1,142 +1,98 @@
-var connectRange = 100
-var drawRange = 100
-var connectForce = pairForce(drawPointLine, rangeFilter, drawRange);
-var defp = {
-  radius: 10, 
-  maxSpeed: 6,
-  mass: 30
-}
+var connectRange = 400
+var drawRange = 400
 
-var pairConnectForce = pairForce(drawPointLine, rangeFilter, drawRange);
+var pulseSystem = createForcePoints(pulseForce, 20, 10, 1);
+
+var pairConnectForce = pairForce(drawPointLine, rangeFilter, [drawRange]);
 var pairSystem = createForcePairs((p1, p2) => {
+  // attract(p1, p2, -1000000, 'charge')
 
-    attract(p1, p2, -100, 'charge')
+  midAttractRepel(p1, p2, connectRange, 1000, 'mass')
 
-
-  if (rangeFilter(p1, p2, connectRange)) {
-  // if (rangeFilter(p1, p2, (p1.radius + p2.radius) * 2)) {
-    attract(p1, p2, 101, 'charge')
-  } 
-
-
-  // if (!rangeFilter(p1, p2, connectRange)) {
-  // attract(p1, p2, -100, 'charge')
-  // } else {
-  //   attract(p1, p2, 100, 'charge')
-  // }
-
-  
   pairConnectForce(p1, p2);
 })
 
-var innerConnectForce = pairForce(drawPointLine, rangeFilter, 200);
+var innerConnectForce = pairForce(drawPointLine, rangeFilter, [200]);
+var innerRepelForce = pairForce(attract, rangeFilter, [10, true], [1000000, 'mass']);
+var innerAttractForce = pairForce(attract, rangeFilter, [600, false], [-1000000, 'mass']);
 var innerPairSystem = createForcePairs((p1, p2) => {
-  // if (!rangeFilter(p1, p2, connectRange / 10)) {
-  //   attract(p1, p2, -1000000, 'mass')
-
-  // } else {
-
-  //   attract(p1, p2, 1000, 'mass')
-  // }
-  // innerConnectForce(p1, p2);
-
-
-  // follow(p1, p1.parent);
-  // follow(p2, p2.parent);
+  // attract(p1, p2, -10, 'charge')
+  innerRepelForce(p1, p2);
+  innerAttractForce(p1, p2);
+  // midAttractRepel(p1, p2, connectRange, 300, 'charge')
+  innerConnectForce(p1, p2);
 })
 
+// var innerSpaceSystem = points => {
+//   debugger;
 
-var innerParentSystem = createForcePoints(point => {
-  if (point.parent) {
-    // debugger;
-    retract(point, point.parent, 100 -10000000);
-    follow(point.parent, point, -100);
-    // nuclear(point.parent, point, 10, 10000)
-    
+//   for (let point of points) {
+
+//     if (point.parent) {
+     
+//     }
+//   }
+// }
+
+
+var innerSpaceForce = pointForce(point => {
+  for (var i = 0; i < point.parent.space.points.length; i++) {
+    follow(point.parent, point.parent.space.points[i], -10000, 'mass');
+    // follow(point.parent.space.points[i], point.parent,  100, 'mass');
+  // midAttractRepel(point.parent, point.parent.space.points[i], 100, 300, 'charge')
+
   }
-})
-
-
-
-var centerForce = createForcePoints((point) => {
-
-  point.radius += point.flip ? 1 : -1;
-
-  if (point.radius > 20) {
-    point.flip = false;
-  }
-  if (point.radius < 10) {
-    point.flip = true;
-  }
-
-})
-
-
-var spaceSystem = point => {
-
-
-  for (var i = 0; i < point.space.points.length; i++) {
-    // attract(point, point.space.points[i], -1000000, 'mass')
-    // follow(point, point.space.points[i], -10, 'mass')
-    // follow(point.space.points[i], point, 100, 'mass')
-    // if (rangeFilter(point, point.space.points[i], 2 * (point.radius + point.space.points[i].radius))) {
-    //   follow(point, point.space.points[i], 100, 'mass')
-    // }
-    drawPointLine(point, point.space.points[i]);
-  }
-}
+}, point => point.parent)
+var innerSpaceSystem = createForcePoints(innerSpaceForce)
 
 
 function setup() {
   createCanvas(1920, 974);
-  // space = new Space([], []);
-  // space = new Space([], [pairSystem]);
-  // space = new Space([], [pairSystem, centerForce]);
-  space = new Space([], [pairSystem, absorb, cleanup]);
-
-  pointStack = [];
+  space = new Space([], [pairSystem, pulseSystem]);
+  // space = new Space([], [pairSystem, pulseSystem, absorb, cleanup]);
   freeze = false;
-  absorbOn = true;
-  maxGroup = 0;
+  // space = new Space([], [pairSystem]);
+  // space = new Space([], [pairSystem, absorb, cleanup]);
 }
 
 function draw() {
   background(66);
-  while (pointStack.length > 0) {
-    space.points.push(pointStack.pop());
-  }
-  // if (time % 2 == 0) {
-  space.update(spaceSystem);
-
-  
-  // }
-
+  space.update();
 }
 
 function mouseClicked() {
-  let parentPoint = new Point({
-    position: createVector(mouseX - (width / 2), mouseY - (height / 2)),
-    // space: new Space([], [innerPairSystem, centerForce]), //, absorb, cleanup]),
-    space: new Space([], [innerPairSystem, innerParentSystem
-      // , absorb, cleanup
-    ]),
-    radius: defp.radius,
-    maxSpeed: defp.maxSpeed,
-    mass: defp.mass
-  });
-  pointStack.push(parentPoint);
-  parentPoint.show();
-  // parentPoint.addChildren(maxGroup);
+  let innerPointOptions = {
+    radius: 9,
+    maxSpeed: 6,
+    // colour: color(0, 127, 255)
+  }
+  let innerSpace = new Space([], [innerPairSystem, innerSpaceSystem], innerPointOptions, 6);
+  // let innerSpace = new Space([], [innerPairSystem, innerSpaceSystem, absorb, cleanup], innerPointOptions, 30);
 
-  // parentPoint.addChildren(random() * maxGroup);
+  let pointOptions = {
+    radius: 10,
+    maxSpeed: 6,
+    mass: 100,
+    // colour: color(255, 127, 0)
+  }
+
+  let point = createPoint(space, pointOptions, innerSpace)
+
+  // for (let p of point.space.points) {
+  //   debugger;
+  //   createPoint(p.space,
+  //     {
+  //       radius: 8,
+  //       maxSpeed: 6,
+  //       colour: color(240, 100, 100)
+  //     }, innerSpace);
+  // }
 }
-
-
 // function mouseReleased() {
 // }
 
 function mouseDragged() {
-  if (space.time % 5 == 0) {
+  if (space.time % 10 == 0) {
     mouseClicked();
   }
 }
@@ -151,28 +107,10 @@ function keyPressed() {
     } else {
       loop();
     }
-  } else if (keyCode === UP_ARROW) {
-    maxGroup++;
-    // console.log('maxGroup: ', maxGroup)
-  } else if (keyCode === DOWN_ARROW) {
-    maxGroup--;
-    // console.log('maxGroup: ', maxGroup)
-  } else if (keyCode === LEFT_ARROW) {
-    if (absorbOn === true) {
-      for (let p of space.points) {
-        p.space.systems.push(absorb)
-        p.space.systems.push(cleanup)
-      }
-    }
-    absorbOn = false;
-  } else if (keyCode === RIGHT_ARROW) {
-    if (absorbOn === false) {
-
-      for (let p of space.points) {
-      p.space.systems.pop()
-      p.space.systems.pop()
-      }
-    }
-    absorbOn = true;
   }
+  // else if (keyCode === UP_ARROW) {
+  // } else if (keyCode === DOWN_ARROW) {
+  // } else if (keyCode === LEFT_ARROW) {
+  // } else if (keyCode === RIGHT_ARROW) {
+  // }
 }

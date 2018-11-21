@@ -1,27 +1,27 @@
-function pointForce(force, filter = null) {
+function pointForce(force, filter = null, filterParams = [], forceParams = []) {
   if (filter) {
     return (point) => {
-      if (filter(point)) {
-        force(point);
+      if (filter(point, ...filterParams)) {
+        force(point, ...forceParams);
       }
     }
   } else {
     return (point) => {
-      force(point);
+      force(point, ...forceParams);
     }
   }
 }
 
-function pairForce(force, filter = null, ...params) {
+function pairForce(force, filter = null, filterParams = [], forceParams = []) {
   if (filter) {
     return (p1, p2) => {
-      if (filter(p1, p2, ...params)) {
-        force(p1, p2);
+      if (filter(p1, p2, ...filterParams)) {
+        force(p1, p2, ...forceParams);
       }
     }
   } else {
     return (p1, p2) => {
-      force(p1, p2);
+      force(p1, p2, ...forceParams);
     }
   }
 }
@@ -43,7 +43,7 @@ function groupForce(force, filter = null) {
 function createForcePoints(force, ...params) {
   return (points) => {
     for (var i = 0; i < points.length; i++) {
-      force(points[i]);
+      force(points[i], ...params);
     }
   }
 }

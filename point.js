@@ -18,18 +18,12 @@ function Point(options = {}) {
   // this.colour = color(random([60, 120, 180, 240, 300, 360]), 100, 100);
   pop();
   // debugger;
+  // this.points = [];
   this.radius = 10;
-  
   this.maxSpeed = 10;
   this.dead = false;
-  this.points = [];
-  
   this.flip = true;
-  
-  
-  for (var option of Object.keys(options)) {
-    this[option] = options[option];
-  }
+  this.merge(options); 
   this.colorCharge();
 }
 
@@ -39,7 +33,7 @@ Point.prototype.tick = function () {
   this.position.add(this.velocity);
   this.acceleration.mult(0);
 
-  // this.velocity.rotate(this.spin * PI);
+  this.velocity.rotate(this.spin * PI);
 }
 
 Point.prototype.show = function () {
@@ -55,10 +49,12 @@ Point.prototype.show = function () {
   pop();
 
   push();
-  translate((width / 2) + this.position.x, (height / 2) + this.position.y);
-  noStroke()
-  colorMode(HSB, 360, 100, 100);
-  fill(this.colour);
+
+
+  // translate((width / 2) + this.position.x, (height / 2) + this.position.y);
+  // noStroke()
+  // colorMode(HSB, 360, 100, 100);
+  // fill(this.colour);
 
   // var mid = this.velocity.copy().normalize().mult(this.radius);
   // var left = mid.copy().rotate(-PI * 2 / 3);
@@ -116,25 +112,40 @@ Point.prototype.colorCharge = function() {
   this.charge = (hue(this.colour) - 179);
 }
 
-Point.prototype.addChildren = function (maxGroup) {
-  for (var i = 0; i < maxGroup; i++) {
-    point = new Point({
-      position: createVector(mouseX - (width / 2) + random(), mouseY - (height / 2) + random()),
-      colour: this.colour,
-      radius: this.radius  / 2,
-      maxSpeed: 6,
-      parent: this
-    });
-    push();
-    colorMode(HSB, 360, 100, 100);
-    var c = hue(point.colour) + this.space.points.length * 60;
-    while (c > 360) {
-      c -= 360;
+
+Point.prototype.merge = function(options) {
+  for (var option of Object.keys(options)) {
+    this[option] = options[option];
+  }
+}
+
+Point.prototype.addChildren = function (maxGroup, options = null) {
+  if (this.space) {
+    for (var i = 0; i < maxGroup; i++) {
+      point = new Point({
+        position: createVector(mouseX - (width / 2) + random(), mouseY - (height / 2) + random()),
+        colour: this.colour,
+        radius: this.radius,
+        maxSpeed: 6,
+        parent: this
+      });
+
+      
+      push();
+      colorMode(HSB, 360, 100, 100);
+      var c = hue(point.colour) + this.space.points.length * 60;
+      while (c > 360) {
+        c -= 360;
+      }
+      point.colour = color(c, 60, 75);
+      pop();
+      
+      if (options) {
+        point.merge(options);
+      }
+      this.space.pointStack.push(point)
+      point.show();
     }
-    point.colour = color(c, 60, 75);
-    pop();
-    this.space.points.push(point)
-    point.show();
   }
 
 
