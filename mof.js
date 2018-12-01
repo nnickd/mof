@@ -1,25 +1,26 @@
-var connectRange = 400
-var drawRange = 400
+var connectRange = 200
+var drawRange = 200
 
 var pulseSystem = createForcePoints(pulseForce, 20, 10, 1);
 
 var pairConnectForce = pairForce(drawPointLine, rangeFilter, [drawRange]);
 var pairSystem = createForcePairs((p1, p2) => {
-  // attract(p1, p2, -1000000, 'charge')
+  attract(p1, p2, -1000000, 'charge')
 
-  midAttractRepel(p1, p2, connectRange, 1000, 'mass')
+  // midAttractRepel(p1, p2, connectRange, 1000, 'mass')
 
   pairConnectForce(p1, p2);
 })
 
 var innerConnectForce = pairForce(drawPointLine, rangeFilter, [200]);
-var innerRepelForce = pairForce(attract, rangeFilter, [10, true], [1000000, 'mass']);
-var innerAttractForce = pairForce(attract, rangeFilter, [600, false], [-1000000, 'mass']);
+var innerRepelForce = pairForce(attract, rangeFilter, [10, true], [1000, 'charge']);
+var innerAttractForce = pairForce(attract, rangeFilter, [300, false], [-1000, 'charge']);
+
 var innerPairSystem = createForcePairs((p1, p2) => {
+  // innerRepelForce(p1, p2);
   // attract(p1, p2, -10, 'charge')
-  innerRepelForce(p1, p2);
-  innerAttractForce(p1, p2);
-  // midAttractRepel(p1, p2, connectRange, 300, 'charge')
+  // innerAttractForce(p1, p2);
+  midAttractRepel(p1, p2, connectRange, -100, 'charge')
   innerConnectForce(p1, p2);
 })
 
@@ -37,7 +38,7 @@ var innerPairSystem = createForcePairs((p1, p2) => {
 
 var innerSpaceForce = pointForce(point => {
   for (var i = 0; i < point.parent.space.points.length; i++) {
-    follow(point.parent, point.parent.space.points[i], -10000, 'mass');
+    attract(point.parent, point.parent.space.points[i], -100, 'mass');
     // follow(point.parent.space.points[i], point.parent,  100, 'mass');
   // midAttractRepel(point.parent, point.parent.space.points[i], 100, 300, 'charge')
 
