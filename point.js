@@ -17,7 +17,6 @@ function Point(options = {}) {
   this.colour = color(random() * 360, 100, 100);
   // this.colour = color(random([60, 120, 180, 240, 300, 360]), 100, 100);
   pop();
-  // debugger;
   // this.points = [];
   this.radius = 10;
   this.maxSpeed = 10;
