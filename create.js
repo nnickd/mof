@@ -1,6 +1,7 @@
 function createPoint(space, pointOptions = null, innerSpace = null) {
     let parentPoint = new Point({
-        position: createVector(mouseX - (width / 2), mouseY - (height / 2))
+        position: createVector(mouseX - (width / 2), mouseY - (height / 2)),
+        parentSpace: space
     });
 
     if (pointOptions) {

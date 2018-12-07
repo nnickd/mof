@@ -54,6 +54,27 @@ function PointForce() {
         }
     }
 
+    this.explodeForce = (p1, p2, amount = 6) => {
+        let points = [p1, p2];
+        for (let point of points) {
+            if (point.parentSpace) {
+                for (i = 0; i < amount; i++) {
+                    point.parentSpace.points.push(
+                        new Point({
+                            position: createVector(point.position.x + (random() + (point.radius * random([-1, 1]))), point.position.y + (random() + (point.radius * random([-1, 1])))),
+                            acceleration: createVector(random() * random([-1, 1]), random() * random([-1, 1])),
+                            radius: point.radius,
+                            life: 100,
+                            maxSpeed: 16
+                        }, [this.exploding])
+                    )
+                }
+                point.life = 100;
+                point.forces = [this.exploding, this.pulseForce]
+            }
+        }
+    }
+
     // Single Point
 
     this.pulseForce = (point, gt = 20, lt = 10, tick = 1) => {
@@ -66,6 +87,40 @@ function PointForce() {
         }
     }
 
+    this.exploding = point => {
+        if (point.life) {
+            if (!point.initRadius) {
+                point.initRadius = point.radius;
+            }
+            point.life--;
+            point.radius -= point.initRadius / point.life;
+            if (point.life <= 0 || point.radius <= 0) {
+                point.dead = true;
+            }
+        }
+    }
 
+    this.mouseForce = p => {
+        p.position.x = mouseX - (width / 2);
+        p.position.y = mouseY - (height / 2);
+
+        p.acceleration.x = 0;
+        p.acceleration.y = 0;
+        p.velocity.x = 0;
+        p.velocity.y = 0;
+
+
+        if (space.time % 10 == 0) {
+
+            let pointOptions = {
+                radius: 10,
+                maxSpeed: 10,
+                mass: 100
+            }
+            let point = createPoint(space, pointOptions);
+        }
+    }
 }
+
+
 
