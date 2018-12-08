@@ -2,12 +2,17 @@ const _PointSystem_ = new PointSystem();
 
 function setup() {
   createCanvas(1920, 974);
-  let mousePoint = new Point({
-    mass: 10000000
-  }, [_PointForce_.mouseForce])
+  // let mousePoint = new Point({
+  //   mass: 10000000
+  // }, [_PointForce_.mouseForce])
 
-  space = new Space([], [_PointSystem_.outerPairSystem, _PointSystem_.pulseSystem]);
-  // space = new Space([], [_PointSystem_.outerPairSystem, _PointSystem_.explodeSystem, _PointSystem_.cleanup]);
+  space = new Space([], [
+      _PointSystem_.outerPairSystem
+      // , _PointSystem_.pulseSystem
+      // , _PointSystem_.explodeSystem
+      // , _PointSystem_.cleanup
+    ]);
+
   freeze = false;
 }
 
@@ -17,21 +22,21 @@ function draw() {
 }
 
 function mouseClicked() {
-  let innerPointOptions = {
-    radius: 7,
-    maxSpeed: 5,
-    mass: 50
-  }
-  let innerSpace = new Space([], [_PointSystem_.innerPairSystem, _PointSystem_.innerPointSystem], innerPointOptions, 6);
+  // let innerPointOptions = {
+  //   radius: 7,
+  //   maxSpeed: 5,
+  //   mass: 50
+  // }
+  // let innerSpace = new Space([], [_PointSystem_.innerPairSystem, _PointSystem_.innerPointSystem], innerPointOptions, 6);
 
   let pointOptions = {
     radius: 10,
-    maxSpeed: 10,
-    mass: 1000
+    maxSpeed: 3,
+    mass: 10
   }
 
-  let point = createPoint(space, pointOptions, innerSpace);
-  // let point = createPoint(space, pointOptions);
+  // let point = createPoint(space, pointOptions, innerSpace);
+  let point = createPoint(space, pointOptions);
 }
 
 function mouseDragged() {
