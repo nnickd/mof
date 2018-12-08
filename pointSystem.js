@@ -15,13 +15,13 @@ var outerDrawForce = _Force_.pairForce(drawPointLine, [], rangeFilter, [outerDra
 
 var outerRepelConstant = 1000;
 var outerRepelField = 'mass';
-var outerRepelRange = 10;
+var outerRepelRange = 90;
 var outerRepelWithinRange = true;
 var outerRepelForce = _Force_.pairForce(_PointForce_.attract, [outerRepelConstant, outerRepelField], rangeFilter, [outerRepelRange, outerRepelWithinRange]);
 
-var outerAttractConstant = -100;
+var outerAttractConstant = -1000;
 var outerAttractField = 'mass';
-var outerAttractRange = 100;
+var outerAttractRange = 110;
 var outerAttractWithinRange = false;
 var outerAttractForce = _Force_.pairForce(_PointForce_.attract, [outerAttractConstant, outerAttractField], rangeFilter, [outerAttractRange, outerAttractWithinRange]);
 
@@ -30,19 +30,24 @@ var innerDrawRange = 50;
 var innerDrawForce = _Force_.pairForce(drawPointLine, [], rangeFilter, [innerDrawRange]);
 
 var innerRepelConstant = 1000;
-var innerRepelField = 'charge';
-var innerRepelRange = 10;
+var innerRepelField = 'mass';
+var innerRepelRange = 40;
 var innerRepelWithinRange = true;
 var innerRepelForce = _Force_.pairForce(_PointForce_.attract, [innerRepelConstant, innerRepelField], rangeFilter, [innerRepelRange, innerRepelWithinRange]);
 
 var innerAttractConstant = -1000;
-var innerAttractField = 'charge';
-var innerAttractRange = 300;
+var innerAttractField = 'mass';
+var innerAttractRange = 60;
 var innerAttractWithinRange = false;
 var innerAttractForce = _Force_.pairForce(_PointForce_.attract, [innerAttractConstant, innerAttractField], rangeFilter, [innerAttractRange, innerAttractWithinRange]);
 
+
+
+var innerOuterDrawForce = _Force_.pairForce(drawPointLine, [], rangeFilter, [0, false]);
 var innerSpaceForce = _Force_.pointForce(point => {
-    // _PointForce_.attract(point.parent, point, -50, 'mass');
+    _PointForce_.attract(point.parent, point, -1000, 'mass');
+
+    innerOuterDrawForce(point.parent, point);
 }, [], point => point.parent)
 
 
@@ -65,6 +70,12 @@ function PointSystem() {
 
     this.innerPairSystem = _Force_.createForcePairs((p1, p2) => {
         // _PointForce_.midAttractRepel(p1, p2, 50, 100, 'charge')
+
+
+        // _PointForce_.attract(p1, p2, -10000000, 'charge');
+        // innerAttractForce(p1, p2);
+        // innerRepelForce(p1, p2);
+
         // innerDrawForce(p1, p2);
     })
 

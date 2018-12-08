@@ -6,8 +6,8 @@ function setup() {
     mass: 10000000
   }, [_PointForce_.mouseForce])
 
-  // space = new Space([mousePoint], [_PointSystem_.outerPairSystem]);
-  space = new Space([mousePoint], [_PointSystem_.outerPairSystem, _PointSystem_.explodeSystem, _PointSystem_.cleanup]);
+  space = new Space([], [_PointSystem_.outerPairSystem, _PointSystem_.pulseSystem]);
+  // space = new Space([], [_PointSystem_.outerPairSystem, _PointSystem_.explodeSystem, _PointSystem_.cleanup]);
   freeze = false;
 }
 
@@ -18,17 +18,16 @@ function draw() {
 
 function mouseClicked() {
   let innerPointOptions = {
-    radius: 30,
-    maxSpeed: 6,
-    mass: 100
+    radius: 7,
+    maxSpeed: 5,
+    mass: 50
   }
-  // let innerSpace = new Space([], [_PointSystem_.innerPairSystem, _PointSystem_.innerPointSystem], innerPointOptions, 0);
-  let innerSpace = new Space([], [innerPairSystem, innerPointSystem], innerPointOptions, 6);
+  let innerSpace = new Space([], [_PointSystem_.innerPairSystem, _PointSystem_.innerPointSystem], innerPointOptions, 6);
 
   let pointOptions = {
     radius: 10,
     maxSpeed: 10,
-    mass: 100
+    mass: 1000
   }
 
   let point = createPoint(space, pointOptions, innerSpace);

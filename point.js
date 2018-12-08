@@ -23,7 +23,7 @@ function Point(options = {}, forces = []) {
   this.maxSpeed = 10;
   this.dead = false;
   this.flip = true;
-  this.merge(options); 
+  this.merge(options);
   this.colorCharge();
 }
 
@@ -35,7 +35,7 @@ Point.prototype.tick = function () {
 
   // this.velocity.rotate(this.spin * PI);
 
-  
+
 }
 
 
@@ -45,7 +45,7 @@ Point.prototype.show = function () {
   noStroke()
   colorMode(HSB, 360, 100, 100);
   fill(this.colour);
-  
+
   // var step = frameCount % 20;
   // var angle = map(step, 0, 20, 0, TWO_PI);
   // var cos_a = cos(angle);
@@ -57,7 +57,7 @@ Point.prototype.show = function () {
   // strokeWeight(3);
   // line(0, 0, this.velocity.x + this.maxSpeed, this.velocity.y + this.maxSpeed)
   // pop();
-  
+
 
 
   ellipse(this.position.x, this.position.y, this.radius);
@@ -65,8 +65,9 @@ Point.prototype.show = function () {
   // rotate(this.spin * PI)
 
   pop();
-  
 
+  // push()
+  // translate(this.position.x - (width / 2), this.position.y - (height / 2));
   // noStroke()
   // colorMode(HSB, 360, 100, 100);
   // fill(this.colour);
@@ -76,11 +77,7 @@ Point.prototype.show = function () {
   // var right = mid.copy().rotate(PI * 2 / 3);
   // triangle(left.x, left.y, mid.x, mid.y, right.x, right.y);
   // triangle(-left.x, -left.y, -mid.x, -mid.y, -right.x, -right.y);
-
-// stroke(33)
-  // bezier(left.x, left.y, mid.x, mid.y, right.x, right.y, -left.x, -left.y)
-  // rotate(this.spin * PI)
-  // text(this.charge, this.position.x + this.radius, this.position.y + this.radius)
+  // pop()
 }
 
 Point.prototype.update = function () {
@@ -121,17 +118,17 @@ Point.prototype.bounds = function () {
 }
 
 
-Point.prototype.mixColor = function(colour) {
+Point.prototype.mixColor = function (colour) {
   this.colour = lerpColor(this.colour, colour, 0.5);
   this.colorCharge();
 }
 
-Point.prototype.colorCharge = function() {
+Point.prototype.colorCharge = function () {
   this.charge = (hue(this.colour) - 179);
 }
 
 
-Point.prototype.merge = function(options) {
+Point.prototype.merge = function (options) {
   for (var option of Object.keys(options)) {
     this[option] = options[option];
   }
@@ -148,7 +145,7 @@ Point.prototype.addChildren = function (maxGroup, options = null) {
         parent: this
       });
 
-      
+
       push();
       colorMode(HSB, 360, 100, 100);
       var c = hue(point.colour) + this.space.points.length * 60;
@@ -157,7 +154,7 @@ Point.prototype.addChildren = function (maxGroup, options = null) {
       }
       point.colour = color(c, 60, 75);
       pop();
-      
+
       if (options) {
         point.merge(options);
       }
