@@ -75,6 +75,27 @@ function PointForce() {
         }
     }
 
+    this.splitForce = (p1, p2, amount = 2) => {
+        let points = [p1, p2];
+        for (let point of points) {
+            if (point.parentSpace) {
+                for (i = 0; i < amount; i++) {
+                    point.parentSpace.points.push(
+                        new Point({
+                            position: createVector(point.position.x + (random() + ( point.radius * random([-1, 1]))), point.position.y + (random() + (point.radius * random([-1, 1])))),
+                            acceleration: createVector(random() * random([-1, 1]), random() * random([-1, 1])),
+                            radius: point.radius / 2,
+                            // life: 100,
+                            maxSpeed: point.maxSpeed
+                        }, [])
+                    )
+                }
+                point.dead = true;
+                // point.forces = [this.exploding, this.pulseForce]
+            }
+        }
+    }
+
     // Single Point
 
     this.pulseForce = (point, gt = 20, lt = 10, tick = 1) => {
@@ -119,6 +140,17 @@ function PointForce() {
             }
             let point = createPoint(space, pointOptions);
         }
+    }
+
+    this.immobilize = p => {
+        // p.position.x = mouseX - (width / 2);
+        // p.position.y = mouseY - (height / 2);
+
+        p.acceleration.x = 0;
+        p.acceleration.y = 0;
+        p.velocity.x = 0;
+        p.velocity.y = 0;
+
     }
 }
 

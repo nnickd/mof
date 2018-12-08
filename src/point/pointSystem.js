@@ -42,6 +42,7 @@ var innerSpaceForce = _Force_.pointForce(point => {
 
 
 var explodeForce = _Force_.pairForce(_PointForce_.explodeForce, [3], _PointFilter_.collideFilter)
+var splitForce = _Force_.pairForce(_PointForce_.splitForce, [], _PointFilter_.collideFilter)
 
 
 function PointSystem() {
@@ -50,9 +51,9 @@ function PointSystem() {
     var outerDrawRange = 100;
     var outerDrawForce = _Force_.pairForce(drawPointLine, [], rangeFilter, [outerDrawRange]);
 
-    var outerRepelConstant = 10;
+    var outerRepelConstant = -10000000000000;
     var outerRepelField = 'mass';
-    var outerRepelRange = 90;
+    var outerRepelRange = 150;
     var outerRepelWithinRange = true;
     var outerRepelForce = _Force_.pairForce(_PointForce_.attract, [outerRepelConstant, outerRepelField], rangeFilter, [outerRepelRange, outerRepelWithinRange]);
 
@@ -63,8 +64,8 @@ function PointSystem() {
     var outerAttractForce = _Force_.pairForce(_PointForce_.attract, [outerAttractConstant, outerAttractField], rangeFilter, [outerAttractRange, outerAttractWithinRange]);
     this.outerPairSystem = _Force_.createForcePairs((p1, p2) => {
         // _PointForce_.attract(p1, p2, -10000000, 'charge');
-        // _PointForce_.attract(p1, p2, -100, 'mass');
-        outerAttractForce(p1, p2);
+        _PointForce_.attract(p1, p2, -10, 'mass');
+        // outerAttractForce(p1, p2);
         outerRepelForce(p1, p2);
         outerDrawForce(p1, p2);
     })
@@ -82,6 +83,7 @@ function PointSystem() {
 
 
     this.explodeSystem = _Force_.createForcePairs(explodeForce)
+    this.splitSystem = _Force_.createForcePairs(splitForce)
 
 
     this.absorb = function(points) {
