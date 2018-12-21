@@ -10,9 +10,8 @@ function Space(points = [], systems = [], pointOptions = null, maxPoints = null)
 
 Space.prototype.update = function (_pointForce = null) {
   while (this.pointStack.length > 0) {
-    debugger;
     this.points.push(this.pointStack.pop());
-    if (this.maxPoints && this.points >= this.maxPoints) {
+    if (this.maxPoints && this.points.length >= this.maxPoints) {
       this.pointStack.length = 0;
     }
   }
@@ -29,4 +28,10 @@ Space.prototype.update = function (_pointForce = null) {
   }
   
   this.time++;
+}
+
+Space.prototype.addPoint = function(...points) {
+  for (let point of points) {
+    this.pointStack.push(point);
+  }
 }

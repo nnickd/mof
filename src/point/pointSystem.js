@@ -9,24 +9,9 @@ var drawPointLine = _DrawSpace_.drawPointLine;
 // Filters
 var rangeFilter = _PointFilter_.rangeFilter;
 
-// Outer Forces
 
 
 // Inner Forces
-var innerDrawRange = 50;
-var innerDrawForce = _Force_.pairForce(drawPointLine, [], rangeFilter, [innerDrawRange]);
-
-var innerRepelConstant = 1000;
-var innerRepelField = 'mass';
-var innerRepelRange = 40;
-var innerRepelWithinRange = true;
-var innerRepelForce = _Force_.pairForce(_PointForce_.attract, [innerRepelConstant, innerRepelField], rangeFilter, [innerRepelRange, innerRepelWithinRange]);
-
-var innerAttractConstant = -1000;
-var innerAttractField = 'mass';
-var innerAttractRange = 60;
-var innerAttractWithinRange = false;
-var innerAttractForce = _Force_.pairForce(_PointForce_.attract, [innerAttractConstant, innerAttractField], rangeFilter, [innerAttractRange, innerAttractWithinRange]);
 
 
 
@@ -48,6 +33,7 @@ var splitForce = _Force_.pairForce(_PointForce_.splitForce, [], _PointFilter_.co
 function PointSystem() {
     this.pulseSystem = _Force_.createForcePoints(_PointForce_.pulseForce, 20, 10, 1);
 
+// Outer Forces
     var outerDrawRange = 100;
     var outerDrawForce = _Force_.pairForce(drawPointLine, [], rangeFilter, [outerDrawRange]);
 
@@ -70,11 +56,29 @@ function PointSystem() {
         outerDrawForce(p1, p2);
     })
 
+
+
+
+// Inner Forces
+    var innerDrawRange = 50;
+    var innerDrawForce = _Force_.pairForce(drawPointLine, [], rangeFilter, [innerDrawRange]);
+
+    var innerRepelConstant = 10;
+    var innerRepelField = 'mass';
+    var innerRepelRange = 40;
+    var innerRepelWithinRange = true;
+    var innerRepelForce = _Force_.pairForce(_PointForce_.attract, [innerRepelConstant, innerRepelField], rangeFilter, [innerRepelRange, innerRepelWithinRange]);
+
+    var innerAttractConstant = -10;
+    var innerAttractField = 'mass';
+    var innerAttractRange = 60;
+    var innerAttractWithinRange = false;
+    var innerAttractForce = _Force_.pairForce(_PointForce_.attract, [innerAttractConstant, innerAttractField], rangeFilter, [innerAttractRange, innerAttractWithinRange]);
     this.innerPairSystem = _Force_.createForcePairs((p1, p2) => {
         // _PointForce_.midAttractRepel(p1, p2, 50, 100, 'charge')
         // _PointForce_.attract(p1, p2, -10000000, 'charge');
-        // innerAttractForce(p1, p2);
-        // innerRepelForce(p1, p2);
+        innerAttractForce(p1, p2);
+        innerRepelForce(p1, p2);
         // innerDrawForce(p1, p2);
     })
 
@@ -155,9 +159,9 @@ function PointSystem() {
                             // points[eater].mixColor(points[eaten].colour);
 
 
-                            //points[eater].velocity.add(points[eaten].velocity)
+                            // points[eater].velocity.add(points[eaten].velocity)
 
-                            //points[eater].applyForce(p5.Vector.mult(points[eaten].velocity, points[eaten].mass))
+                            // points[eater].applyForce(p5.Vector.mult(points[eaten].velocity, points[eaten].mass))
                         }
 
                     }

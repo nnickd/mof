@@ -15,13 +15,14 @@ function setup() {
     _PointSystem_.outerPairSystem
     // , _PointSystem_.pulseSystem
     // , _PointSystem_.splitSystem
-    , _PointSystem_.explodeSystem
-    // , _PointSystem_.absorb
+    // , _PointSystem_.explodeSystem
+    , _PointSystem_.absorb
     , _PointSystem_.cleanup
   ]);
 
   freeze = false;
   dragVec = null;
+  initDragVec = null;
 }
 
 function draw() {
@@ -32,19 +33,50 @@ function draw() {
     push()
     translate(width / 2, height / 2);
     stroke(1);
-    line(dragVec.x, dragVec.y, mouseX - (width / 2), mouseY - (height / 2))
+    line(initDragVec.x, initDragVec.y, mouseX - (width / 2), mouseY - (height / 2))
     pop()
   }
 }
 
 
 
-function mouseClicked() {
+// function mouseClicked() {
+//   if (dragVec) {
+//     dragVec.sub(createVector(mouseX - (width / 2), mouseY - (height / 2)))
+
+//     // let pointOptions = {
+//     //   radius: 10,
+//     //   maxSpeed: 20,
+//     //   mass: 10,
+//     //   acceleration: dragVec.div(10)
+//     // }
+
+//     // createPoint(space, pointOptions);
+
+//     dragVec = null;
+//   } else {
+//     dragVec = createVector(mouseX - (width / 2), mouseY - (height / 2))
+//   }
+// }
+
+
+
+function mouseDragged() {
+  if (!initDragVec) {
+    initDragVec = createVector(mouseX - (width / 2), mouseY - (height / 2));
+    // dragVec = createVector(mouseX - (width / 2), mouseY - (height / 2));
+  }
+
+  if (initDragVec) {
+    dragVec = p5.Vector.sub(initDragVec, createVector(mouseX - (width / 2), mouseY - (height / 2)))
+  }
+}
+
+function mouseReleased() {
   if (dragVec) {
-    dragVec.sub(createVector(mouseX - (width / 2), mouseY - (height / 2)))
 
     let pointOptions = {
-      radius: 10,
+      radius: 20,
       maxSpeed: 20,
       mass: 10,
       acceleration: dragVec.div(10)
@@ -52,29 +84,29 @@ function mouseClicked() {
 
     createPoint(space, pointOptions);
 
-    dragVec = null;
-  } else {
-    dragVec = createVector(mouseX - (width / 2), mouseY - (height / 2))
   }
+
+  dragVec = null;
+  initDragVec = null;
 }
 
 
 // function mouseClicked() {
-  // let innerPointOptions = {
-  //   radius: 7,
-  //   maxSpeed: 5,
-  //   mass: 50
-  // }
-  // let innerSpace = new Space([], [_PointSystem_.innerPairSystem, _PointSystem_.innerPointSystem], innerPointOptions, 6);
+// let innerPointOptions = {
+//   radius: 7,
+//   maxSpeed: 5,
+//   mass: 50
+// }
+// let innerSpace = new Space([], [_PointSystem_.innerPairSystem, _PointSystem_.innerPointSystem], innerPointOptions, 6);
 
-  // let pointOptions = {
-  //   radius: 10,
-  //   maxSpeed: 3,
-  //   mass: 10
-  // }
+// let pointOptions = {
+//   radius: 10,
+//   maxSpeed: 3,
+//   mass: 10
+// }
 
-  // // let point = createPoint(space, pointOptions, innerSpace);
-  // let point = createPoint(space, pointOptions);
+// // let point = createPoint(space, pointOptions, innerSpace);
+// let point = createPoint(space, pointOptions);
 // }
 
 // function mouseDragged() {

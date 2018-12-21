@@ -118,7 +118,8 @@ Point.prototype.addChildren = function (maxGroup, options = null) {
       if (options) {
         point.merge(options);
       }
-      this.space.pointStack.push(point)
+      
+      this.space.addPoint(point)
       point.show();
     }
   }
