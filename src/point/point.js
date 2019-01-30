@@ -43,20 +43,20 @@ Point.prototype.show = function () {
 }
 
 Point.prototype.update = function () {
-  this.time++;
   if (this.forces) {
     for (let force of this.forces) {
       force(this);
     }
   }
-
+  
   this.tick();
   this.bounds();
   this.show();
-
+  
   if (this.space) {
     this.space.update();
   }
+  this.time++;
 }
 
 Point.prototype.bounds = function () {
@@ -80,7 +80,6 @@ Point.prototype.bounds = function () {
   }
 }
 
-
 Point.prototype.mixColor = function (colour) {
   this.colour = lerpColor(this.colour, colour, 0.5);
   this.colorCharge();
@@ -94,43 +93,4 @@ Point.prototype.merge = function (options) {
   for (var option of Object.keys(options)) {
     this[option] = options[option];
   }
-}
-
-Point.prototype.addChildren = function (maxGroup, options = null) {
-  if (this.space) {
-    for (var i = 0; i < maxGroup; i++) {
-      point = new Point({
-        position: createVector(mouseX - (width / 2) + random(), mouseY - (height / 2) + random()),
-        colour: this.colour,
-        radius: this.radius,
-        maxSpeed: 6,
-        parent: this
-      });
-
-
-      push();
-      colorMode(HSB, 360, 100, 100);
-      var c = hue(point.colour) + this.space.points.length * 60;
-      while (c > 360) {
-        c -= 360;
-      }
-      point.colour = color(c, 60, 75);
-      pop();
-
-      if (options) {
-        point.merge(options);
-      }
-      
-      this.space.addPoint(point)
-      point.show();
-    }
-  }
-
-
-  // this.charge = 0;
-  // this.mass = 0;
-  // for (var p of this.space.points) {
-  //   this.charge += p.charge * 2;
-  //   this.mass += p.mass * 2;
-  // }
 }

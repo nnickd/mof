@@ -11,8 +11,4 @@ function PointFilter() {
         return distance < (p1.radius + p2.radius) / 2;
     }
 
-    // function frequencyFilter(p1, p2, time, frequency) {
-
-    // }
-
 }

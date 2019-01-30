@@ -28,20 +28,16 @@ function DrawSpace() {
         translate(width / 2, height / 2);
         noStroke()
         colorMode(HSB, 360, 100, 100);
-        
-        
         fill(point.colour);
         beginShape();
 
         for (let i = 0; i < 6; i++) {
-
             let angle = map(i, 0, 6, 0, TWO_PI)
             let x = point.radius * sin(angle) 
             let y = point.radius * cos(angle)
             vertex(point.position.x + x + random(-6, 6), point.position.y + y + random(-6, 6));
         }
         endShape();
-
         // rotate(this.spin * PI)
         pop();
     }

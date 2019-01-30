@@ -22,10 +22,6 @@ var innerSpaceForce = _Force_.pointForce(point => {
     innerOuterDrawForce(point.parent, point);
 }, [], point => point.parent)
 
-
-
-
-
 var explodeForce = _Force_.pairForce(_PointForce_.explodeForce, [3], _PointFilter_.collideFilter)
 var splitForce = _Force_.pairForce(_PointForce_.splitForce, [], _PointFilter_.collideFilter)
 
@@ -33,7 +29,7 @@ var splitForce = _Force_.pairForce(_PointForce_.splitForce, [], _PointFilter_.co
 function PointSystem() {
     this.pulseSystem = _Force_.createForcePoints(_PointForce_.pulseForce, 20, 10, 1);
 
-// Outer Forces
+    // Outer Forces
     var outerDrawRange = 100;
     var outerDrawForce = _Force_.pairForce(drawPointLine, [], rangeFilter, [outerDrawRange]);
 
@@ -56,10 +52,7 @@ function PointSystem() {
         outerDrawForce(p1, p2);
     })
 
-
-
-
-// Inner Forces
+    // Inner Forces
     var innerDrawRange = 50;
     var innerDrawForce = _Force_.pairForce(drawPointLine, [], rangeFilter, [innerDrawRange]);
 
@@ -90,7 +83,7 @@ function PointSystem() {
     this.splitSystem = _Force_.createForcePairs(splitForce)
 
 
-    this.absorb = function(points) {
+    this.absorb = function (points) {
         for (let i in points) {
             if (!points[i].deads) {
 

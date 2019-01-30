@@ -10,12 +10,9 @@ function createPoint(space, pointOptions = null, innerSpace = null) {
 
     if (innerSpace) {
         parentPoint.space = innerSpace;
-        if (innerSpace.maxPoints) {
-            parentPoint.addChildren(innerSpace.maxPoints, innerSpace.pointOptions)
-        }
     }
 
-    space.points.push(parentPoint);
+    space.addPoint(parentPoint);
     parentPoint.show();
 
     return parentPoint;
