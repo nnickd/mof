@@ -7,7 +7,7 @@ function Point(options = {}, forces = []) {
   this.life = null;
   this.dead = false;
   this.flip = true;
-  this.draw = ['drawEllipse'];
+  this.draw = ['drawWobbly'];
   // this.draw = [random(['drawEllipse', 'drawRect'])];
 
   
@@ -24,6 +24,7 @@ function Point(options = {}, forces = []) {
 
   this.merge(options);
   this.colorCharge();
+  this.time = 0;
 }
 
 Point.prototype.tick = function () {
@@ -42,6 +43,7 @@ Point.prototype.show = function () {
 }
 
 Point.prototype.update = function () {
+  this.time++;
   if (this.forces) {
     for (let force of this.forces) {
       force(this);

@@ -77,7 +77,7 @@ function mouseReleased() {
 
     let pointOptions = {
       radius: 20,
-      maxSpeed: 20,
+      maxSpeed: 3,
       mass: 10,
       acceleration: dragVec.div(10)
     }
