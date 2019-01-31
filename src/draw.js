@@ -1,4 +1,10 @@
 function DrawSpace() {
+    this.draw = function(point, drawFunc, drawParams) {
+        return () => {
+            this[drawFunc](point, ...drawParams);
+        }
+    }
+
     this.drawPointLine = function(p1, p2) {
         push()
         translate(width / 2, height / 2);
@@ -23,7 +29,7 @@ function DrawSpace() {
         pop();
     }
 
-    this.drawWobbly = function (point) {
+    this.drawWobbly = function (point, vertexNum = 6) {
         push();
         translate(width / 2, height / 2);
         noStroke()
@@ -31,11 +37,17 @@ function DrawSpace() {
         fill(point.colour);
         beginShape();
 
-        for (let i = 0; i < 6; i++) {
-            let angle = map(i, 0, 6, 0, TWO_PI)
-            let x = point.radius * sin(angle) 
-            let y = point.radius * cos(angle)
-            vertex(point.position.x + x + random(-6, 6), point.position.y + y + random(-6, 6));
+        for (let i = 0; i < vertexNum; i++) {
+            let angle = map(i, 0, vertexNum, 0, TWO_PI)
+            let scale = random() * 2 + 1;
+            let x = point.radius * scale * sin(angle) 
+            let y = point.radius * scale * cos(angle)
+            let vec = createVector(point.position.x + x, point.position.y + y)
+            // vec.normalize();
+            // vec.mult(3)
+            // debugger;
+
+            vertex(vec.x , vec.y);
         }
         endShape();
         // rotate(this.spin * PI)

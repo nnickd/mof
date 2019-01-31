@@ -2,6 +2,7 @@ const _PointForce_ = new PointForce();
 const _Force_ = new Force();
 const _PointFilter_ = new PointFilter();
 const _DrawSpace_ = new DrawSpace();
+const _PointBounds_ = new PointBounds();
 
 // Draw
 var drawPointLine = _DrawSpace_.drawPointLine;
@@ -12,9 +13,6 @@ var rangeFilter = _PointFilter_.rangeFilter;
 
 
 // Inner Forces
-
-
-
 var innerOuterDrawForce = _Force_.pairForce(drawPointLine, [], rangeFilter, [0, false]);
 var innerSpaceForce = _Force_.pointForce(point => {
     _PointForce_.attract(point.parent, point, -1000, 'mass');
@@ -48,8 +46,8 @@ function PointSystem() {
         // _PointForce_.attract(p1, p2, -10000000, 'charge');
         _PointForce_.attract(p1, p2, -10, 'mass');
         // outerAttractForce(p1, p2);
-        outerRepelForce(p1, p2);
-        outerDrawForce(p1, p2);
+        // outerRepelForce(p1, p2);
+        // outerDrawForce(p1, p2);
     })
 
     // Inner Forces

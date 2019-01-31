@@ -7,8 +7,11 @@ function Point(options = {}, forces = []) {
   this.life = null;
   this.dead = false;
   this.flip = true;
-  this.draw = ['drawWobbly'];
+  // this.draw = ['drawWobbly', 12];
+  this.draw = _DrawSpace_.draw(this, 'drawWobbly', [7]);
+  this.bound = ['walls'];
   // this.draw = [random(['drawEllipse', 'drawRect'])];
+  // this.bound = [random(['walls', 'toroidal'])];
 
   
   this.mass = 100;
@@ -37,8 +40,15 @@ Point.prototype.tick = function () {
 
 
 Point.prototype.show = function () {
-  for (let draw of this.draw) {
-    _DrawSpace_[draw](this);
+  // for (let draw of this.draw) {
+  //   _DrawSpace_[draw](this);
+  // } 
+  this.draw()
+
+}
+Point.prototype.bounds = function () {
+  for (let bound of this.bound) {
+    _PointBounds_[bound](this);
   } 
 }
 
@@ -59,26 +69,6 @@ Point.prototype.update = function () {
   this.time++;
 }
 
-Point.prototype.bounds = function () {
-  if (this.position.x < -(width / 2)) {
-    this.position.x = -(width / 2);
-    this.velocity.x *= -1;
-  }
-
-  else if (this.position.x > (width / 2)) {
-    this.position.x = (width / 2);
-    this.velocity.x *= -1;
-  }
-  if (this.position.y < -(height / 2)) {
-    this.position.y = -(height / 2);
-    this.velocity.y *= -1;
-  }
-
-  else if (this.position.y > (height / 2)) {
-    this.position.y = (height / 2);
-    this.velocity.y *= -1;
-  }
-}
 
 Point.prototype.mixColor = function (colour) {
   this.colour = lerpColor(this.colour, colour, 0.5);
