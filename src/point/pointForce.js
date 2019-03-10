@@ -1,14 +1,17 @@
 function PointForce() {
     // Pair Points
-    this.attract = function (p1, p2, constant = 10, field = 'mass') {
+    this.attract = function (p1, p2, constant = 10, field = 'mass', distance = null) {
         var pointer = p5.Vector.sub(p2.position, p1.position).normalize();
-        let distance = p2.position.dist(p1.position);
+        distance = distance || p2.position.dist(p1.position);
         let force = (p1[field] * p2[field] * constant) / (distance * distance);
         pointer.mult(force);
 
 
-        p2.acceleration.add(p5.Vector.div(pointer, p2.mass));
-        p1.acceleration.add(p5.Vector.div(pointer, p1.mass).rotate(PI / 2));
+        p1.applyForce(pointer)
+        p2.applyForce(pointer.rotate(PI))
+
+        // p2.acceleration.add(p5.Vector.div(pointer, p2.mass));
+        // p1.acceleration.add(p5.Vector.div(pointer, p1.mass).rotate(PI / 2));
     }
 
     this.follow = function (p1, p2, constant = 10, field = 'mass') {
@@ -17,6 +20,17 @@ function PointForce() {
         let force = (p1[field] * p2[field] * constant) / (distance * distance);
         pointer.mult(force);
         p2.acceleration.add(p5.Vector.div(pointer, p2.mass));
+    }
+
+    this.followMouse = function (point, constant = 10) {
+        let _mouse = createVector(mouseX - _camera.x, mouseY - _camera.y);
+        var pointer = p5.Vector.sub(_mouse, point.position).normalize().mult(constant).sub(point.velocity);
+        // let distance = _mouse.dist(point.position);
+        // let force = (point.mass * constant) / (distance * distance);
+        // pointer.mult(force);
+
+        
+        point.applyForce(pointer);
     }
 
     this.retract = function (p1, p2, constant = 10, field = 'mass') {
@@ -32,7 +46,14 @@ function PointForce() {
     this.nuclear = (p1, p2, range = 10, constant) => {
         var distance = p2.position.dist(p1.position);
         if (distance < range) {
-            this.attract(p1, p2, constant);
+            this.attract(p1, p2, constant, 'mass', distance);
+        }
+    }
+
+    this.contact = (p1, p2, constant) => {
+        var distance = p2.position.dist(p1.position);
+        if (distance < p1.radius + p2.radius) {
+            this.attract(p1, p2, constant, 'mass', distance);
         }
     }
 

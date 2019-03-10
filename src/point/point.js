@@ -8,8 +8,11 @@ function Point(options = {}, forces = []) {
   this.dead = false;
   this.flip = true;
   // this.draw = ['drawWobbly', 12];
-  this.draw = _DrawSpace_.draw(this, 'drawWobbly', [7]);
-  this.bound = ['walls'];
+  // this.draw = _DrawSpace_.draw(this, 'drawWobbly', [7]);
+
+
+  this.draw = ['drawEllipse'];
+  this.bound = ['toroidal'];
   // this.draw = [random(['drawEllipse', 'drawRect'])];
   // this.bound = [random(['walls', 'toroidal'])];
 
@@ -25,8 +28,8 @@ function Point(options = {}, forces = []) {
   this.colour = color(random() * 360, 100, 100);
   pop();
 
-  this.merge(options);
   this.colorCharge();
+  this.merge(options);
   this.time = 0;
 }
 
@@ -40,10 +43,10 @@ Point.prototype.tick = function () {
 
 
 Point.prototype.show = function () {
-  // for (let draw of this.draw) {
-  //   _DrawSpace_[draw](this);
-  // } 
-  this.draw()
+  for (let draw of this.draw) {
+    _DrawSpace_[draw](this);
+  } 
+  // this.draw()
 
 }
 Point.prototype.bounds = function () {
@@ -60,7 +63,7 @@ Point.prototype.update = function () {
   }
   
   this.tick();
-  this.bounds();
+  // this.bounds();
   this.show();
   
   if (this.space) {
@@ -83,4 +86,9 @@ Point.prototype.merge = function (options) {
   for (var option of Object.keys(options)) {
     this[option] = options[option];
   }
+}
+
+Point.prototype.applyForce = function(force) {
+  // this.acceleration.add(force.div(this.mass))
+  this.acceleration.add(p5.Vector.div(force, this.mass))
 }

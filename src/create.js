@@ -1,19 +1,19 @@
 function createPoint(space, pointOptions = null, innerSpace = null) {
-    let parentPoint = new Point({
-        position: createVector(mouseX - (width / 2), mouseY - (height / 2)),
-        parentSpace: space
+    let point = new Point({
+        position: createVector(mouseX - (width / 2), mouseY - (height / 2), random(0, 1)),
+        outerSpace: space
     });
 
     if (pointOptions) {
-        parentPoint.merge(pointOptions);
+        point.merge(pointOptions);
     }
 
     if (innerSpace) {
-        parentPoint.space = innerSpace;
+        point.innerSpace = innerSpace;
     }
 
-    space.addPoint(parentPoint);
-    parentPoint.show();
+    space.addPoint(point);
+    point.show();
 
-    return parentPoint;
+    return point;
 }

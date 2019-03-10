@@ -7,7 +7,7 @@ function DrawSpace() {
 
     this.drawPointLine = function(p1, p2) {
         push()
-        translate(width / 2, height / 2);
+        // translate(width / 2, height / 2);
         var colour = lerpColor(p1.colour, p2.colour, 0.5);
         colour.setAlpha(100);
         stroke(colour);
@@ -20,35 +20,39 @@ function DrawSpace() {
 
     this.drawEllipse = function (point) {
         push();
-        translate(width / 2, height / 2);
+        translate(width / 2,height / 2);
         noStroke()
         colorMode(HSB, 360, 100, 100);
         fill(point.colour);
-        ellipse(point.position.x, point.position.y, point.radius);
+        ellipse(point.position.x, point.position.y, point.radius)// * point.position.z * 0.001);
         // rotate(this.spin * PI)
         pop();
     }
 
     this.drawWobbly = function (point, vertexNum = 6) {
+        if (!point.vertices) {
+            point.vertices = [];
+            for (let i = 0; i < vertexNum; i++) {
+                let angle = map(i, 0, vertexNum, 0, TWO_PI)
+                let x = point.radius * sin(angle)
+                let y = point.radius * cos(angle)
+                let vec = createVector(point.position.x + x, point.position.y + y);
+                point.vertices.push(vec);
+            }
+        }
+
+
         push();
         translate(width / 2, height / 2);
         noStroke()
         colorMode(HSB, 360, 100, 100);
         fill(point.colour);
         beginShape();
-
-        for (let i = 0; i < vertexNum; i++) {
-            let angle = map(i, 0, vertexNum, 0, TWO_PI)
-            let scale = random() * 2 + 1;
-            let x = point.radius * scale * sin(angle) 
-            let y = point.radius * scale * cos(angle)
-            let vec = createVector(point.position.x + x, point.position.y + y)
-            // vec.normalize();
-            // vec.mult(3)
-            // debugger;
-
-            vertex(vec.x , vec.y);
+        for (let vex of point.vertices) {
+            vex.add(point.velocity);
+            vertex(vex.x, vex.y);
         }
+        
         endShape();
         // rotate(this.spin * PI)
         pop();
