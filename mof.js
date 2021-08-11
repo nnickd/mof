@@ -28,7 +28,7 @@ var pairSystem = _Force_.createForcePairs((p1, p2) => {
 
     // _PointForce_.contact(p1, p2, -10);
   // _PointForce_.attract(p1, p2, 100, 'mass', 400);
-  _PointForce_.attract(p1, p2, 2, 'mass', 300);
+  _PointForce_.attract(p1, p2, 3, 'mass');
 
 
   // _PointForce_.contact(p1, p2, -100);
@@ -42,19 +42,20 @@ var pairSystem = _Force_.createForcePairs((p1, p2) => {
 
 function setup() {
   createCanvas(1920, 974, WEBGL);
-  player = new Point({
-    mass: 10,
-    colour: color(0, 100, 100),
-    forces: [function (point) {
-      _PointForce_.followMouse(point);
-    }],
-    position: createVector(0, 0, 0),
-    radius: 40,
-    name: 'player'
-  })
+  // player = new Point({
+  //   mass: 10,
+  //   colour: color(0, 100, 100),
+  //   // forces: [function (point) {
+  //   //   _PointForce_.followMouse(point);
+  //   // }],
+  //   position: createVector(0, 0, 0),
+  //   radius: 40,
+  //   name: 'player'
+  // })
   
 
-  space = new Space([player], [pairSystem]);
+  space = new Space([], [pairSystem]);
+  // space = new Space([player], [pairSystem]);
   space.hmmm = [0, 100, -1000, 1000, 100]
   freeze = false;
   time = 1;
@@ -65,7 +66,11 @@ function setup() {
 function draw() {
   background(66);
   // perspective(PI / 3.0, width / height, 0.1, 500);
-  camera(_camera.x, _camera.y, _camera.z, width / 2, height / 2, 10, 0, 1, 0);
+  camera(_camera.x, _camera.y, _camera.z, width / 2, height / 2, 0, 0, 1, 0);
+  if (keyCode == TAB) {
+    orbitControl();
+  }
+  // camera(width / 2, height / 2, _camera.z, _camera.x, _camera.y, 0, 0, 1, 0);
   // push()
   // translate(width / 2, height / 2)
   space.update();
@@ -83,8 +88,8 @@ function mouseClicked() {
   // createPoint(space, {
   //   velocity: vel
   // })
-
-  createPoint(space)
+  if (keyCode != TAB)
+    createPoint(space)
 
 }
 
@@ -114,12 +119,21 @@ function keyPressed() {
   if (keyCode === LEFT_ARROW) {
     _camera.x -= 10;
   }
+  if (keyCode === RIGHT_ARROW) {
+    _camera.x += 10;
+  }
+  if (keyCode === UP_ARROW) {
+    _camera.y -= 10;
+  }
+  if (keyCode === DOWN_ARROW) {
+    _camera.y += 10;
+  }
 }
 function mouseWheel(event) {
   debugger;
   // print(event.delta);
   //move the square according to the vertical scroll amount
-_camera.z += event.delta
+_camera.z += event.delta 
   // _camera.x = event.x;
 // _camera.y = event.y;
   //uncomment to block page scrolling

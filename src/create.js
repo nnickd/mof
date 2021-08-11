@@ -1,6 +1,6 @@
 function createPoint(space, pointOptions = null, innerSpace = null) {
     let point = new Point({
-        position: createVector(mouseX - (width / 2), mouseY - (height / 2), random(0, 1)),
+        position: createVector(mouseX - _camera.x, mouseY - _camera.y, random(100, 1000)),
         outerSpace: space
     });
 

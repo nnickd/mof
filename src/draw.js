@@ -20,7 +20,7 @@ function DrawSpace() {
 
     this.drawEllipse = function (point) {
         push();
-        translate(width / 2,height / 2);
+        translate(_camera.x, _camera.y);
         noStroke()
         colorMode(HSB, 360, 100, 100);
         fill(point.colour);
